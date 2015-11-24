@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="ChatCustomCell" rowHeight="75" id="2" customClass="ChatCustomCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="55"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2" id="ODW-Zq-vQa">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="54"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="59j-1A-y0k">
+                        <rect key="frame" x="4" y="7" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="Ya0-9a-e2z"/>
+                            <constraint firstAttribute="height" constant="40" id="bIq-sb-UOu"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Property Area   Property Description" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wy1-oX-gfn">
+                        <rect key="frame" x="52" y="14" width="268" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="268" id="SiK-CJ-kNI"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="59j-1A-y0k" firstAttribute="leading" secondItem="ODW-Zq-vQa" secondAttribute="leadingMargin" constant="-4" id="6gd-Wf-Z7b"/>
+                    <constraint firstItem="Wy1-oX-gfn" firstAttribute="leading" secondItem="59j-1A-y0k" secondAttribute="trailing" constant="8" symbolic="YES" id="Dp6-wj-H9s"/>
+                    <constraint firstItem="Wy1-oX-gfn" firstAttribute="centerY" secondItem="59j-1A-y0k" secondAttribute="centerY" id="JpD-8p-VC9"/>
+                    <constraint firstItem="59j-1A-y0k" firstAttribute="top" secondItem="ODW-Zq-vQa" secondAttribute="topMargin" constant="-1" id="PGi-Kt-wuU"/>
+                    <constraint firstItem="Wy1-oX-gfn" firstAttribute="top" secondItem="ODW-Zq-vQa" secondAttribute="topMargin" constant="6" id="q1D-xv-i4i"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="imgIcon" destination="59j-1A-y0k" id="OY2-0p-paa"/>
+                <outlet property="titlelbl" destination="Wy1-oX-gfn" id="2hv-FC-hT9"/>
+            </connections>
+            <point key="canvasLocation" x="-412" y="225.5"/>
+        </tableViewCell>
+    </objects>
+</document>

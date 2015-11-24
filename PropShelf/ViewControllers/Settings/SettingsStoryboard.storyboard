@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+    </dependencies>
+    <scenes>
+        <!--Settings View Controller-->
+        <scene sceneID="6eA-jd-IcE">
+            <objects>
+                <viewController storyboardIdentifier="Settings" id="1vU-B7-lUF" customClass="SettingsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="g5b-LI-B3x"/>
+                        <viewControllerLayoutGuide type="bottom" id="nuD-fC-dpm"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fRN-Bv-Gdg">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Twe-6O-wca">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="1vU-B7-lUF" id="chg-VE-f0q"/>
+                                    <outlet property="delegate" destination="1vU-B7-lUF" id="WxT-ow-ktq"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Twe-6O-wca" secondAttribute="trailing" id="61O-im-0LY"/>
+                            <constraint firstItem="Twe-6O-wca" firstAttribute="bottom" secondItem="nuD-fC-dpm" secondAttribute="top" id="DVt-5v-Sak"/>
+                            <constraint firstItem="Twe-6O-wca" firstAttribute="leading" secondItem="fRN-Bv-Gdg" secondAttribute="leading" id="GhM-AP-Zzh"/>
+                            <constraint firstItem="Twe-6O-wca" firstAttribute="top" secondItem="fRN-Bv-Gdg" secondAttribute="top" id="Wwh-PM-KQT"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="Twe-6O-wca"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="61O-im-0LY"/>
+                                <exclude reference="DVt-5v-Sak"/>
+                                <exclude reference="GhM-AP-Zzh"/>
+                                <exclude reference="Wwh-PM-KQT"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="Twe-6O-wca"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="61O-im-0LY"/>
+                                <include reference="DVt-5v-Sak"/>
+                                <include reference="GhM-AP-Zzh"/>
+                                <include reference="Wwh-PM-KQT"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <connections>
+                        <outlet property="tableView" destination="Twe-6O-wca" id="ncI-EN-vBH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eZd-uJ-Zv7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="211.5" y="339.75"/>
+        </scene>
+    </scenes>
+</document>

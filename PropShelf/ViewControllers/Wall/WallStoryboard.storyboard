@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--Wall View Controller-->
+        <scene sceneID="UaJ-ej-ifr">
+            <objects>
+                <viewController storyboardIdentifier="Wall" id="FrY-1E-74A" customClass="WallViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Wp6-uL-qIW"/>
+                        <viewControllerLayoutGuide type="bottom" id="PPY-uw-g0s"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xDn-5m-AOV">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="55" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="h0O-O9-DQM">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search Property" id="k1j-Ug-fqm">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="FrY-1E-74A" id="wYn-4i-IQJ"/>
+                                    </connections>
+                                </searchBar>
+                                <connections>
+                                    <outlet property="dataSource" destination="FrY-1E-74A" id="J6I-91-Rec"/>
+                                    <outlet property="delegate" destination="FrY-1E-74A" id="myc-iW-j5h"/>
+                                </connections>
+                            </tableView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hEc-Cx-oDq">
+                                <rect key="frame" x="-61" y="-14" width="123" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="T0q-Sh-dNf"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="CHATS"/>
+                                    <segment title="EXPLORE"/>
+                                </segments>
+                                <color key="tintColor" red="0.96078431372549022" green="0.25490196078431371" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="T0q-Sh-dNf"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="T0q-Sh-dNf"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="segmentedControlDidChange:" destination="FrY-1E-74A" eventType="valueChanged" id="GwV-oZ-Sst"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="hEc-Cx-oDq" firstAttribute="centerX" secondItem="h0O-O9-DQM" secondAttribute="centerX" id="2gZ-Xm-kdT"/>
+                            <constraint firstItem="hEc-Cx-oDq" firstAttribute="leading" secondItem="xDn-5m-AOV" secondAttribute="leadingMargin" constant="26" id="AtT-Iu-pRR">
+                                <variation key="heightClass=regular-widthClass=compact" constant="-20"/>
+                            </constraint>
+                            <constraint firstItem="h0O-O9-DQM" firstAttribute="leading" secondItem="xDn-5m-AOV" secondAttribute="leading" id="HAT-Kc-glg"/>
+                            <constraint firstItem="h0O-O9-DQM" firstAttribute="bottom" secondItem="PPY-uw-g0s" secondAttribute="top" id="PKc-vR-Hnp">
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                            </constraint>
+                            <constraint firstItem="hEc-Cx-oDq" firstAttribute="top" secondItem="xDn-5m-AOV" secondAttribute="topMargin" constant="12" id="Z2R-QG-WFX">
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                            </constraint>
+                            <constraint firstAttribute="trailing" secondItem="h0O-O9-DQM" secondAttribute="trailing" id="ms1-HA-0ht"/>
+                            <constraint firstItem="h0O-O9-DQM" firstAttribute="top" secondItem="hEc-Cx-oDq" secondAttribute="bottom" constant="54" id="wt3-78-xuJ">
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                            </constraint>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="h0O-O9-DQM"/>
+                                <exclude reference="hEc-Cx-oDq"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="2gZ-Xm-kdT"/>
+                                <exclude reference="AtT-Iu-pRR"/>
+                                <exclude reference="Z2R-QG-WFX"/>
+                                <exclude reference="HAT-Kc-glg"/>
+                                <exclude reference="PKc-vR-Hnp"/>
+                                <exclude reference="ms1-HA-0ht"/>
+                                <exclude reference="wt3-78-xuJ"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="h0O-O9-DQM"/>
+                                <include reference="hEc-Cx-oDq"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="2gZ-Xm-kdT"/>
+                                <include reference="AtT-Iu-pRR"/>
+                                <include reference="Z2R-QG-WFX"/>
+                                <include reference="HAT-Kc-glg"/>
+                                <include reference="PKc-vR-Hnp"/>
+                                <include reference="ms1-HA-0ht"/>
+                                <include reference="wt3-78-xuJ"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <connections>
+                        <outlet property="SearchBar" destination="k1j-Ug-fqm" id="spG-yE-Bvv"/>
+                        <outlet property="segmentedControl" destination="hEc-Cx-oDq" id="gQI-ov-Dgi"/>
+                        <outlet property="tableView" destination="h0O-O9-DQM" id="D9p-OX-fo2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hiK-3I-oP2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="117" y="103.5"/>
+        </scene>
+    </scenes>
+</document>

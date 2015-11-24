@@ -1,0 +1,45 @@
+/* 
+  Localizable.strings
+  PropShelf
+
+  Created by Gaurang Patel on 10/13/15.
+  Copyright © 2015 Gaurang Patel. All rights reserved.
+*/
+
+"APP_POPUP_TITLE" = "PropShelf";
+
+//Internet error
+"NO_INTERNET_ALERT_TITLE" = "Network Error";
+
+"NO_INTERNET_ALERT_MESSAGE" = "Internet connection is not working.";
+
+"CAMERA_UNAVAILABLE" = "Camera not available.";
+
+"ERROR_ALERT_TITLE" = "Error";
+
+"OTP_ALREADY_SENT" = "OTP is already sent, please verifiy or you can have new OTP by clicking on Resend OTP";
+
+"DATA_IS_MANDATORY" = "All fileds mandatory.";
+
+"VERIFY_OTP" = "Please verify OTP.";
+
+"MOBILE_DETAILS_MANDATORY" = "Please provide mobile details.";
+
+"OTP_RESEND" = "Resend OTP successful.";
+
+"WALL_NAV_TITLE" = "PropShelf";
+
+"CREATE_GROUP_NAV_TITLE" = "Create Group";
+
+"SETTINGS_NAV_TITLE" = "Settings";
+
+"ABOUT_NAV_TITLE" = "About";
+
+"USER_PROFILE_NAV_TITLE" = "Profile";
+
+"ENTER_MANDATORY_FIELDS" = "Please enter all mandatory fileds.";
+
+"SELECT_CITY" = "Please select city first.";
+
+
+
