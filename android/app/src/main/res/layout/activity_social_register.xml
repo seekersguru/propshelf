@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/prop_theme_color" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="15dp"
+        android:padding="10dp"
+        android:background="@color/white" >
+
+        <TextView
+            android:id="@+id/signinusing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="Sign in using"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/dark_gray"
+             />
+
+        <LinearLayout
+            android:id="@+id/lySocial"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signinusing"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="30dp"
+            android:paddingBottom="30dp">
+
+            <ImageButton
+                android:id="@+id/google_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:onClick="onClick"
+                android:src="@drawable/google" />
+
+            <ImageButton
+                android:id="@+id/facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:onClick="onClick"
+                android:src="@drawable/facebook" />
+
+            <ImageButton
+                android:id="@+id/linkedin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:onClick="onClick"
+                android:src="@drawable/in" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,143 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/prop_theme_color"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:background="@color/white" >
+
+
+        <TextView
+            android:id="@+id/welcome"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lySocial"
+            android:layout_centerHorizontal="true"
+            android:padding="20dp"
+
+
+            android:gravity="center"
+            android:text="Congratulations! You've successfully registered!"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/dark_gray"
+            />
+
+        <TextView
+            android:id="@+id/usemobilenumber"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/welcome"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:text="Please verify your mobile number to continue"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/dark_gray"
+            />
+
+        <LinearLayout
+            android:id="@+id/lyOTP"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usemobilenumber"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginStart="20dp"
+            android:weightSum="20" >
+
+            <EditText
+                android:id="@+id/etCountryCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="3"
+                android:inputType="number"
+                android:background="@drawable/black_border"
+                android:hint="91" 
+                android:maxLength="2"/>
+
+            <EditText
+                android:id="@+id/etPhoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="14"
+                android:layout_marginLeft="5dp"
+                android:inputType="number"
+                android:maxLength="10"
+                android:background="@drawable/black_border"
+                android:hint="10 Digit No" />
+
+            <Button
+                android:id="@+id/btnSendOTP"
+                style="@style/PropButtonStyle"
+                android:onClick="onClick"
+                android:text="Send OTP" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lyVerify"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lyOTP"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center" >
+
+            <EditText
+                android:id="@+id/etOTP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/black_border"
+                android:hint="OTP"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:maxLength="6"
+                android:minWidth="100sp" />
+
+            <Button
+                android:id="@+id/btnVerify"
+                style="@style/PropButtonStyle"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:onClick="onClick"
+                android:text="Verify" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/resendOPT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lyVerify"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="10dp"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:clickable="true"
+            android:text="Resend OTP"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/prop_theme_color"
+             />
+    </RelativeLayout>
+
+</RelativeLayout>

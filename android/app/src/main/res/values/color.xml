@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="prop_theme_color">#EF4437</color>
+    <color name="prop_semi_theme_color">#F09B9B</color>
+    
+    <color name="light_gray">#CFCFCF</color>
+    <color name="divider_light_gray">#E0E0E0</color>
+    <color name="dark_gray">#828282</color>
+    <color name="to_light_gray">#F0F0F0</color>
+    <color name="sky_blue_btn_bg">#0A6FBF</color>
+    <color name="lignt_black_btn_bg">#353543</color>
+    <color name="chat_left">#E7F3FF</color>
+    <color name="chat_right">#D2F7FF</color>
+    <color name="dark_blue">#0A6FBF</color>
+    <color name="semi_trans_theme_color_btn_bg">#2200B1A2</color>
+    <color name="semi_trans_theme">#8C000000</color>
+    <color name="android_text">#999999</color>
+    <color name="blackish_green">#056564</color>
+    <!-- <color name="primary">#00BCD4</color> -->
+
+</resources>

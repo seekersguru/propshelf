@@ -1,0 +1,33 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.noticee.app.Points" >
+
+    <item
+        android:id="@+id/action_media"
+        android:icon="@drawable/media"
+        android:title="Media"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/search"
+        android:title="search"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/navMore"
+        android:icon="@drawable/nav_more"
+        android:title="overflow"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_new_group"
+                android:orderInCategory="100"
+                android:title="New Group"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_settings"
+                android:title="Settings" />
+        </menu>
+    </item>
+
+</menu>

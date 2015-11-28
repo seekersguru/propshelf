@@ -1,0 +1,40 @@
+<resources>
+
+       <!--
+        Base application theme for API 14+. This theme completely replaces
+        AppBaseTheme from BOTH res/values/styles.xml and
+        res/values-v11/styles.xml on API 14+ devices.
+    -->
+    <style name="AppBaseTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <!-- API 14 theme customizations can go here. -->
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/MyActionBar</item>
+    </style>
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+
+        <item name="android:windowContentOverlay">@null</item>
+
+    </style>
+    <style name="Theme.Default" parent="@android:style/Theme.Holo.Light"></style>
+    <style name="Theme.NoTitle" parent="@android:style/Theme.Holo.Light.NoActionBar"></style>
+    <style name="Theme.FullScreen" parent="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"></style>
+    <style name="mytheme" parent="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"></style>
+
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/prop_theme_color</item>
+        <item name="android:displayOptions">useLogo|showHome</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Myactionbar</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Myactionbar</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@color/prop_theme_color</item>
+        <item name="displayOptions">useLogo|showHome</item>
+    </style>
+    <style name="FullHeightDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    
+</resources>
