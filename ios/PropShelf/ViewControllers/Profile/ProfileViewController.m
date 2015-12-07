@@ -16,40 +16,44 @@
 
 #import <MessageUI/MessageUI.h>
 
-@interface ProfileViewController () <MFMessageComposeViewControllerDelegate>
+@interface ProfileViewController () <MFMessageComposeViewControllerDelegate, UIActionSheetDelegate>
 
 @end
 
 @implementation ProfileViewController
 
-@synthesize recepientStr;
-
-@synthesize recepientIdStr;
-
-@synthesize propertyStr;
+@synthesize getUserDetails;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    recentPostArray = [NSMutableArray arrayWithObjects:@"Lorem ipsum dolor sit er elit lamet.", @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", @"Lorem ipsum dolor sit er elit lamet.", @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", @"Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", nil];
+    selectedIndexPath = 100000;
 
-    NSMutableDictionary *dict1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Group - 1", @"groupName", @"1", @"status", nil];
-    NSMutableDictionary *dict2 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Group - 2", @"groupName", @"1", @"status", nil];
-    NSMutableDictionary *dict3 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Group - 3", @"groupName", @"0", @"status", nil];
-    NSMutableDictionary *dict4 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Group - 4", @"groupName", @"1", @"status", nil];
-    NSMutableDictionary *dict5 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Group - 5", @"groupName", @"0", @"status", nil];
-    NSMutableDictionary *dict6 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Group - 6", @"groupName", @"0", @"status", nil];
-    NSMutableDictionary *dict7 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Group - 7", @"groupName", @"1", @"status", nil];
-    NSMutableDictionary *dict8 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Group - 8", @"groupName", @"0", @"status", nil];
+    mobileNumber.textColor = [UIColor lightGrayColor];
     
-    groupsArray = [NSMutableArray arrayWithObjects:dict1, dict2, dict3, dict4, dict5, dict6, dict7, dict8, nil];
+    recepientlbl.text = [self.userDict objectForKey:@"firstName"];
+    titlelbl1.text = [NSString stringWithFormat:@"Groups %@ is part of", [self.userDict objectForKey:@"firstName"]];
+    titlelbl2.text = [NSString stringWithFormat:@"Recent posts by %@", [self.userDict objectForKey:@"firstName"]];
 
-    recepientlbl.text = recepientStr;
-    
-    titlelbl1.text = [NSString stringWithFormat:@"Groups %@ is part of", recepientStr];
-    
-    titlelbl2.text = [NSString stringWithFormat:@"Recent posts by %@", recepientStr];
+    if ([NetworkError checkNetwork]) {
+        
+        [self showLoaderWithTitle:@"Loading Data..."];
+        
+        if (self.getUserDetails == nil) {
+            
+            self.getUserDetails = [[GetUserDetails alloc] init];
+            self.getUserDetails.delegate = self;
+        }
+        
+        [self.getUserDetails getUserDetailsRequest:[self.userDict objectForKey:@"id"]];
+    }
+    else {
+        
+        [self showAlertViewWithTitle:NSLocalizedString(@"NO_INTERNET_ALERT_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_ALERT_MESSAGE", nil)];
+        
+        return;
+    }
 
     CGFloat borderWidth = 1.0f;
     
@@ -70,8 +74,6 @@
     view3.backgroundColor = [UIColor whiteColor];
     view3.layer.cornerRadius = 4.0f;
     view3.layer.masksToBounds = YES;
-    
-    mobileNumber.text = [NSString stringWithFormat:@"%@ %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"CountryCode"], [[NSUserDefaults standardUserDefaults] objectForKey:@"mobileNumber"]];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -79,6 +81,32 @@
     [super viewWillAppear:animated];
     
     self.navigationController.navigationBarHidden = YES;
+}
+
+#pragma mark - Get User Details Model Class Delegate Method
+
+-(void)didGetUserDetailsSuccessfully:(NSMutableDictionary *)userDict {
+    
+    mobileNumber.textColor = [UIColor blackColor];
+
+    recentPostArray = [[userDict objectForKey:@"recent_non_media_posts"] mutableCopy];
+    
+    groupsArray = [[userDict objectForKey:@"groups"] mutableCopy];
+
+    mobileNumber.text = [NSString stringWithFormat:@"+91 %@", [userDict objectForKey:@"mobile"]];
+    
+    threadId = [userDict objectForKey:@"for_chat_thread_id_for_1_to_1_chat"];
+    
+    [self.groupTableView reloadData];
+    
+    [self.postTableView reloadData];
+    
+    [self removeLoader];
+}
+
+-(void)didGetUserDetailsFailed:(ASIHTTPRequest *)therequest {
+    
+    [self removeLoader];
 }
 
 #pragma mark - Button Action Method
@@ -90,7 +118,11 @@
 
 -(IBAction)chatBtnTapped:(id)sender {
     
-    [APP_DELEGATE addChatScreen:self.threadIdStr titleStr:self.propertyStr];
+    NSMutableDictionary *dict = [self.userDict mutableCopy];
+        
+    [dict setObject:threadId forKey:@"threadId"];
+    
+    [APP_DELEGATE addChatScreen:dict];
 }
 
 -(IBAction)msgBtnTapped:(id)sender {
@@ -109,6 +141,60 @@
     if([[UIApplication sharedApplication] canOpenURL:callUrl])
     {
         [[UIApplication sharedApplication] openURL:callUrl];
+    }
+}
+
+-(IBAction)menuDotsBtnTapped:(id)sender
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"New Group", @"Settings", nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    actionSheet.tag = 0;
+    [actionSheet showInView:self.view];
+}
+
+#pragma mark - UIActionSheet Delegate Methods
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        return;
+    }
+    
+    if (actionSheet.tag == 0) {
+        
+        switch (buttonIndex) {
+            case 0: {
+                
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"CreateGroupStoryboard" bundle:nil];
+                CreateGroupViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"CreateGroup"];
+                [self.navigationController pushViewController:viewController animated:YES];
+            }
+                break;
+            case 1: {
+                
+                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"SettingsStoryboard" bundle:nil];
+                SettingsViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Settings"];
+                [self.navigationController pushViewController:viewController animated:YES];
+            }
+                break;
+            default:
+                
+                break;
+        }
+    }
+    else {
+        
+        switch (buttonIndex) {
+            case 0:
+                
+                break;
+            case 1:
+                
+                break;
+                
+            default:
+                break;
+        }
     }
 }
 
@@ -164,9 +250,9 @@
 
         NSMutableDictionary *dict = [groupsArray objectAtIndex:indexPath.row];
 
-        groupCell.titlelbl.text = [dict objectForKey:@"groupName"];
+        groupCell.titlelbl.text = [dict objectForKey:@"name"];
 
-        if ([[dict objectForKey:@"status"] isEqualToString:@"0"]) {
+        if ([[dict objectForKey:@"logged_in_user_joined_unjoined"] intValue] == 0) {
             //NSLog(@"Not Joined");
             
             [groupCell.joinBtn setTitleColor:[UIColor colorWithRed:245.0/255.0 green:65.0/255.0 blue:62.0/255.0 alpha:1.0] forState:UIControlStateNormal];
@@ -196,18 +282,54 @@
     CGPoint currentTouchPosition = [touch locationInView:self.groupTableView];
     NSIndexPath *indexPath = [self.groupTableView indexPathForRowAtPoint: currentTouchPosition];
     //NSLog(@"Selected  row:%d in section:%d",indexPath.row,indexPath.section);
-        
-    NSMutableDictionary *dict = [groupsArray objectAtIndex:indexPath.row];
     
-    if ([[dict objectForKey:@"status"] isEqualToString:@"0"]) {
+    selectedIndexPath = indexPath.row;
+
+    NSMutableDictionary *dict = [[groupsArray objectAtIndex:indexPath.row] mutableCopy];
+    
+    if ([[dict objectForKey:@"logged_in_user_joined_unjoined"] intValue] == 0) {
         NSLog(@"Not Joined");
         
-        [dict setValue:@"1" forKey:@"status"];
+        if ([NetworkError checkNetwork]) {
+            
+            [self showLoaderWithTitle:@"Joining Group..."];
+            
+            if (self.getGroupsModelClass == nil) {
+                
+                self.getGroupsModelClass = [[GetGroupsModelClass alloc] init];
+                self.getGroupsModelClass.delegate = self;
+            }
+            
+            [self.getGroupsModelClass joinUnJoinGroupRequest:[[dict objectForKey:@"id"] intValue] url:Join_URL];
+        }
+        else {
+            
+            [self showAlertViewWithTitle:NSLocalizedString(@"NO_INTERNET_ALERT_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_ALERT_MESSAGE", nil)];
+            
+            return;
+        }
     }
     else {
         NSLog(@"Already Joined");
         
-        [dict setValue:@"0" forKey:@"status"];
+        if ([NetworkError checkNetwork]) {
+            
+            [self showLoaderWithTitle:@"Leaving Group..."];
+            
+            if (self.getGroupsModelClass == nil) {
+                
+                self.getGroupsModelClass = [[GetGroupsModelClass alloc] init];
+                self.getGroupsModelClass.delegate = self;
+            }
+            
+            [self.getGroupsModelClass joinUnJoinGroupRequest:[[dict objectForKey:@"id"] intValue] url:UnJoin_URL];
+        }
+        else {
+            
+            [self showAlertViewWithTitle:NSLocalizedString(@"NO_INTERNET_ALERT_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_ALERT_MESSAGE", nil)];
+            
+            return;
+        }
     }
     
     [groupsArray replaceObjectAtIndex:indexPath.row withObject:dict];
@@ -222,7 +344,10 @@
 }
 
 - (void)configureBasicCell:(RecentPostCustomCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    cell.titlelbl.text = [recentPostArray objectAtIndex:indexPath.row];
+    
+    NSMutableDictionary *dict = [recentPostArray objectAtIndex:indexPath.row];
+    
+    cell.titlelbl.text = [dict objectForKey:@"text"];
 }
 
 #pragma mark - UITableViewDelegate
@@ -261,7 +386,7 @@
     
     //NSLog(@"%f", size.height);
     
-    return size.height + 1.0f; // Add 1.0f for the cell separator height
+    return size.height + 1.0f - 5.0f; // Add 1.0f for the cell separator height
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -331,6 +456,54 @@
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark -
+#pragma mark Groups Model Classes Delegate
+
+-(void)didGetGroupsSuccessfully:(NSMutableArray *)groupArray {
+        
+    [self removeLoader];
+}
+
+-(void)didGetGroupsFailed:(ASIHTTPRequest *)therequest {
+    
+    [self removeLoader];
+}
+
+-(void)didJoinUnJoinGroupSuccessfully {
+    
+    NSMutableDictionary *dict = [[groupsArray objectAtIndex:selectedIndexPath] mutableCopy];
+    
+    if ([[dict objectForKey:@"logged_in_user_joined_unjoined"] intValue] == 0) {
+        
+        [dict setValue:[NSNumber numberWithInt:1] forKey:@"logged_in_user_joined_unjoined"];
+    }
+    else {
+        
+        [dict setValue:[NSNumber numberWithInt:0] forKey:@"logged_in_user_joined_unjoined"];
+    }
+    
+    [groupsArray replaceObjectAtIndex:selectedIndexPath withObject:dict];
+    
+    [self.groupTableView reloadData];
+    
+    [self removeLoader];
+}
+
+-(void)didJoinUnJoinGroupFailed:(ASIHTTPRequest *)therequest {
+    
+    [self removeLoader];
+}
+
+-(void)didGroupDeletedSuccessfully {
+    
+    [self removeLoader];
+}
+
+-(void)didGroupDeletedFailed:(ASIHTTPRequest *)therequest {
+        
+    [self removeLoader];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -10,8 +10,11 @@
 
 @protocol ThreadDetailsModelClassDelegate <NSObject>
 
--(void)didGetThreadDetailsSuccessfully:(NSMutableArray *)chatsArray;
+-(void)didGetThreadDetailsSuccessfully:(NSMutableArray *)chatArray;
 -(void)didGetThreadDetailsFailed:(ASIHTTPRequest *)therequest;
+
+-(void)didGetGroupDetailsSuccessfully:(NSMutableArray *)chatArray;
+-(void)didGetGroupDetailsFailed:(ASIHTTPRequest *)therequest;
 
 @end
 
@@ -21,5 +24,6 @@
 @property (nonatomic,strong) ASINetworkQueue *nsqueue;
 
 -(void)getThreadDetails:(NSString *)threadId;
+-(void)getGroupDetails:(NSString *)groupId;
 
 @end

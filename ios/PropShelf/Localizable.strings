@@ -8,6 +8,8 @@
 
 "APP_POPUP_TITLE" = "PropShelf";
 
+"LEAVE_GROUP" = "Are you sure you want to leave group?";
+
 //Internet error
 "NO_INTERNET_ALERT_TITLE" = "Network Error";
 
@@ -16,6 +18,8 @@
 "CAMERA_UNAVAILABLE" = "Camera not available.";
 
 "ERROR_ALERT_TITLE" = "Error";
+
+"OTP_ALREADY_SENT" = "OTP is already sent, please verifiy or you can have new OTP by clicking on Resend OTP";
 
 "OTP_ALREADY_SENT" = "OTP is already sent, please verifiy or you can have new OTP by clicking on Resend OTP";
 

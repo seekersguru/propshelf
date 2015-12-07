@@ -18,5 +18,6 @@
 +(void)saveLoggedInUserInfoFromDictionary:(NSDictionary*)userInfo;
 +(NSString*)getCurrentSessionId;
 +(NSDictionary*)retriveLoggedInUserInfo;
++(NSString*)getThreadId:(NSString *)loggendInUserId selectedUserId:(NSString *)userId;
 
 @end

@@ -29,23 +29,22 @@
 @implementation ChatViewController
 
 @synthesize textMsgModelClass;
-@synthesize propertyStr;
 @synthesize reloads = reloads_;
 @synthesize isCameFromWall;
 @synthesize Uploadedimage;
-@synthesize threadIdStr;
 @synthesize isGroup;
 @synthesize threadDetailsModelClass;
-@synthesize groupId;
-@synthesize recipientId, recipientStr;
+@synthesize imgMsgModelClass;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    searching = NO;
-    
-    self.sphChatTable.tableHeaderView = SearchBar;
+    //self.sphChatTable.tableHeaderView = SearchBar;
+
+    joinBtn.layer.cornerRadius = 5.0f;
+    joinBtn.layer.masksToBounds = YES;
+    joinBtn.hidden = YES;
 
     chatsArray = [NSMutableArray array];
     
@@ -71,6 +70,8 @@
                                                          @"PLEASE NOTE: please translate \"terms of service\" and \"privacy policy\" as well, and leave the #<ts># and #<pp># around your translations just as in the English version of this message.")];*/
     
     [self getAllChatMessages];
+    
+    self.sphChatTable.backgroundColor = [UIColor clearColor];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -79,13 +80,65 @@
     
     self.navigationController.navigationBarHidden = NO;
     
-    self.sphChatTable.backgroundColor = [UIColor clearColor];
-    //[self.sphChatTable setContentOffset:CGPointMake(0, 44)];
+    self.sphChatTable.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 45);
+    
+    if (isGroup == YES) {
+        
+        self.isGroupJoined = [[NSUserDefaults standardUserDefaults] integerForKey:@"isGroupJoined"];
+
+        if (self.isGroupJoined == 1) {
+            
+            joinBtn.hidden = YES;
+            
+            self.sphChatTable.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 45);
+        }
+        else {
+            
+            joinBtn.hidden = NO;
+            
+            self.sphChatTable.frame = CGRectMake(0, 51, self.view.frame.size.width, self.view.frame.size.height - 45);
+        }
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
     
     [super viewWillDisappear:animated];
+    
+    /*if (containerView != nil) {
+        containerView = nil;
+        [containerView removeFromSuperview];
+    }
+    if (textView != nil) {
+        textView.delegate = nil;
+        textView = nil;
+        [textView removeFromSuperview];
+    }
+    if (Uploadedimage != nil) {
+        Uploadedimage = nil;
+    }
+    if (self.sphChatTable != nil) {
+        self.sphChatTable = nil;
+    }
+    if (self.dataDict != nil) {
+        self.dataDict = nil;
+    }
+    if (self.threadDetailsModelClass != nil) {
+        self.threadDetailsModelClass.delegate = nil;
+        self.threadDetailsModelClass = nil;
+    }
+    if (self.textMsgModelClass != nil) {
+        self.textMsgModelClass.delegate = nil;
+        self.textMsgModelClass = nil;
+    }
+    if (self.imgMsgModelClass != nil) {
+        self.imgMsgModelClass.delegate = nil;
+        self.imgMsgModelClass = nil;
+    }
+    if (self.getGroupsModelClass != nil) {
+        self.getGroupsModelClass.delegate = nil;
+        self.getGroupsModelClass = nil;
+    }*/
 }
 
 #pragma mark -
@@ -139,12 +192,34 @@
     // Customize the title text for *all* UINavigationBars
     UILabel *navTitle = [[UILabel alloc] init];
     navTitle.frame = CGRectMake(lblXAxis, 2, 200, 44);
-    navTitle.text = self.propertyStr;
+    
+    if (isGroup == YES) {
+        
+        navTitle.text = [self.dataDict objectForKey:@"name"];
+    }
+    else {
+        
+        if ([self.dataDict objectForKey:@"reciepents"] != nil) {
+            
+            NSMutableArray *recipientArray = [[self.dataDict objectForKey:@"reciepents"] mutableCopy];
+            NSMutableDictionary *recipientDict = [recipientArray objectAtIndex:0];
+            
+            navTitle.text = [recipientDict objectForKey:@"firstName"];
+            
+            recipientArray = nil;
+            recipientDict = nil;
+        }
+        else {
+            
+            navTitle.text = [self.dataDict objectForKey:@"firstName"];
+        }
+    }
+    
     navTitle.textColor = [UIColor whiteColor];
     navTitle.backgroundColor = [UIColor clearColor];
     navTitle.textAlignment = NSTextAlignmentLeft;
     [navTitleView addSubview:navTitle];
-    
+        
     UIButton *transparentBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     [transparentBtn setFrame:CGRectMake(lblXAxis, 2, 200, 44)];
     [transparentBtn addTarget:self action:@selector(transparentBtnTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -163,7 +238,7 @@
 {
     if ([NetworkError checkNetwork]) {
         
-        [self showLoaderWithTitle:@"Loading..."];
+        [self showLoaderWithTitle:@"Loading Chats..."];
         
         if (self.threadDetailsModelClass == nil) {
             
@@ -171,7 +246,14 @@
             self.threadDetailsModelClass.delegate = self;
         }
         
-        [self.threadDetailsModelClass getThreadDetails:self.threadIdStr];
+        if (isGroup == YES) {
+            
+            [self.threadDetailsModelClass getGroupDetails:[self.dataDict objectForKey:@"id"]];
+        }
+        else {
+            
+            [self.threadDetailsModelClass getThreadDetails:[self.dataDict objectForKey:@"threadId"]];
+        }
     }
     else {
         
@@ -179,58 +261,15 @@
         
         return;
     }
-
-    /*NSString *rowNumber=[NSString stringWithFormat:@"%d",(int)chatsArray.count];
-    [self adddBubbledata:ktextByme mtext:@"Hi!!!!!!!" mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSeding];
-    [self performSelector:@selector(messageSent:) withObject:rowNumber afterDelay:1.0];
-    [self adddBubbledata:ktextbyother mtext:@"Heloo!!!!!" mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSent];
-    rowNumber=[NSString stringWithFormat:@"%d",(int)chatsArray.count];
-    [self adddBubbledata:ktextByme mtext:@"How are you doing today?" mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSeding];
-    [self performSelector:@selector(messageSent:) withObject:rowNumber afterDelay:1.5];
-    [self adddBubbledata:ktextbyother mtext:@"I'm doing great! what abt you?" mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSent];*/
 }
+
+#pragma mark Thread Details Model Class Methods
 
 -(void)didGetThreadDetailsSuccessfully:(NSMutableArray *)chatArray {
     
     //chatsArray = [chatArray mutableCopy];
     
-    NSDictionary *loggedInInfoDict = [Common retriveLoggedInUserInfo];
-
-    NSString *rowNumber = [NSString stringWithFormat:@"%d",(int)chatsArray.count];
-    
-    for (int i = 0; i < chatArray.count; i++) {
-        
-        NSMutableDictionary *dict = [chatArray objectAtIndex:i];
-
-        if ([[[dict objectForKey:@"createdBy"] valueForKey:@"id"] isEqualToString:[loggedInInfoDict objectForKey:LOGGED_IN_USER_ID]]) {
-            
-            if ([[dict objectForKey:@"mimeType"] isEqualToString:TEXT_MSG_TYPE] || [dict objectForKey:@"mimeType"] == nil) {
-                
-                [self adddBubbledata:ktextByme mtext:[dict objectForKey:@"text"] mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSeding];
-                
-                [self performSelector:@selector(messageSent:) withObject:rowNumber afterDelay:1.0];
-            }
-            else {
-                
-                [self adddBubbledata:ktextByme mtext:[dict objectForKey:@"text"] mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSeding];
-            }
-        }
-        else {
-           
-            if ([[dict objectForKey:@"mimeType"] isEqualToString:TEXT_MSG_TYPE] || [dict objectForKey:@"mimeType"] == nil) {
-                
-                [self adddBubbledata:ktextbyother mtext:[dict objectForKey:@"text"] mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSent];
-                
-                [self performSelector:@selector(messageSent:) withObject:rowNumber afterDelay:1.5];
-            }
-            else {
-                
-                [self adddBubbledata:ktextbyother mtext:[dict objectForKey:@"text"] mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSent];
-            }
-            
-            [self messageSent:rowNumber];
-        }
-    }
+    [self showAllChatMsg:chatArray];
     
     [self removeLoader];
 }
@@ -240,15 +279,93 @@
     [self removeLoader];
 }
 
+-(void)didGetGroupDetailsSuccessfully:(NSMutableArray *)chatArray {
+    
+    [self showAllChatMsg:chatArray];
+
+    [self removeLoader];
+}
+
+-(void)didGetGroupDetailsFailed:(ASIHTTPRequest *)therequest {
+    
+    [self removeLoader];
+}
+
+-(void)showAllChatMsg:(NSMutableArray *)chatArray {
+    
+    NSDictionary *loggedInInfoDict = [Common retriveLoggedInUserInfo];
+    
+    //NSString *rowNumber = [NSString stringWithFormat:@"%d",(int)chatsArray.count];
+    
+    for (int i = 0; i < chatArray.count; i++) {
+        
+        NSMutableDictionary *dict = [chatArray objectAtIndex:i];
+        
+        if ([[[dict objectForKey:@"createdBy"] valueForKey:@"id"] isEqualToString:[loggedInInfoDict objectForKey:@"id"]]) {
+            
+            if ([[dict objectForKey:@"mimeType"] isEqualToString:TEXT_MSG_TYPE] || [dict objectForKey:@"mimeType"] == nil) {
+                
+                [self adddBubbledata:ktextByme mtext:[dict objectForKey:@"text"] mFromName:@"" mtime:nil mimage:nil msgstatus:kStatusSeding];
+            }
+            else {
+                
+                NSString *imageUrlString = @"";
+                
+                if ([dict objectForKey:@"mediaUrl"] == nil) {
+                    
+                    imageUrlString = [NSString stringWithFormat:@"%@%@", IMAGE_MSG_BASE_URL, [dict objectForKey:@"text"]];
+                }
+                else {
+                    
+                    imageUrlString = [NSString stringWithFormat:@"%@%@", IMAGE_MSG_BASE_URL, [dict objectForKey:@"mediaUrl"]];
+                }
+                
+                [self adddBubbledata:kImageByme mtext:nil mFromName:@"" mtime:imageUrlString mimage:nil msgstatus:kStatusSeding];
+                
+                imageUrlString = nil;
+            }
+        }
+        else {
+            
+            if ([[dict objectForKey:@"mimeType"] isEqualToString:TEXT_MSG_TYPE] || [dict objectForKey:@"mimeType"] == nil) {
+                
+                [self adddBubbledata:ktextbyother mtext:[dict objectForKey:@"text"] mFromName:[NSString stringWithFormat:@"%@ %@", [[dict objectForKey:@"createdBy"] valueForKey:@"firstName"], [[dict objectForKey:@"createdBy"] valueForKey:@"lastName"]] mtime:nil mimage:nil msgstatus:kStatusSent];
+            }
+            else {
+                
+                NSString *imageUrlString = @"";
+                
+                if ([dict objectForKey:@"mediaUrl"] == nil) {
+                    
+                    imageUrlString = [NSString stringWithFormat:@"%@%@", IMAGE_MSG_BASE_URL, [dict objectForKey:@"text"]];
+                }
+                else {
+                    
+                    imageUrlString = [NSString stringWithFormat:@"%@%@", IMAGE_MSG_BASE_URL, [dict objectForKey:@"mediaUrl"]];
+                }
+
+                [self adddBubbledata:kImageByOther mtext:nil mFromName:[NSString stringWithFormat:@"%@ %@", [[dict objectForKey:@"createdBy"] valueForKey:@"firstName"], [[dict objectForKey:@"createdBy"] valueForKey:@"lastName"]] mtime:imageUrlString mimage:nil msgstatus:kStatusSeding];
+                
+                imageUrlString = nil;
+            }
+        }
+    }
+}
+
 #pragma mark -
 #pragma mark setUpTextFieldforIphone Methods
 
 -(void)setUpTextFieldforIphone
 {
     containerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-45, self.view.frame.size.width, 45)];
-    containerView.backgroundColor = [UIColor clearColor];
+    containerView.backgroundColor = [UIColor whiteColor];
+    containerView.layer.borderColor = [UIColor colorWithRed:207.0/255.0 green:207.0/255.0 blue:207.0/255.0 alpha:1.0].CGColor;
+    containerView.layer.borderWidth = 1.0f;
+    containerView.backgroundColor = [UIColor whiteColor];
+    containerView.layer.cornerRadius = 0.0f;
+    containerView.layer.masksToBounds = YES;
 
-    textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(47, 3, self.view.frame.size.width - 96, 45)];
+    textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(47, 5, self.view.frame.size.width - 96, 45)];
     textView.contentInset = UIEdgeInsetsMake(0, 5, 0, 5);
     
     textView.minNumberOfLines = 1;
@@ -258,10 +375,18 @@
     textView.delegate = self;
     textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0);
     textView.backgroundColor = [UIColor whiteColor];
+    textView.placeholder = @"Type here...";
     
+    textView.layer.borderColor = [UIColor colorWithRed:207.0/255.0 green:207.0/255.0 blue:207.0/255.0 alpha:1.0].CGColor;
+    textView.layer.borderWidth = 1.0f;
+    textView.backgroundColor = [UIColor whiteColor];
+    textView.layer.cornerRadius = 5.0f;
+    textView.layer.masksToBounds = YES;
+
     [self.view addSubview:containerView];
 
-    UIImage *rawEntryBackground = [UIImage imageNamed:@"MessageEntryInputField.png"];
+    UIImage *rawEntryBackground = [UIImage imageNamed:@""]; //MessageEntryInputField.png
+    
     UIImage *entryBackground = [rawEntryBackground stretchableImageWithLeftCapWidth:13 topCapHeight:22];
     UIImageView *entryImageView = [[UIImageView alloc] initWithImage:entryBackground];
     entryImageView.frame = CGRectMake(47, 0, self.view.frame.size.width - 96, 45);
@@ -278,7 +403,7 @@
     UIImage *optionBtnBackground = [[UIImage imageNamed:@"share"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     
     UIButton *doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    doneBtn.frame = CGRectMake(self.view.frame.size.width - 40, 3, 35, 35);
+    doneBtn.frame = CGRectMake(self.view.frame.size.width - 40, 5, 35, 35);
     doneBtn.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
     [doneBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [doneBtn addTarget:self action:@selector(resignTextView) forControlEvents:UIControlEventTouchUpInside];
@@ -286,7 +411,7 @@
     [containerView addSubview:doneBtn];
     
     UIButton *doneBtn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    doneBtn2.frame = CGRectMake(containerView.frame.origin.x+5,3, 35,35);
+    doneBtn2.frame = CGRectMake(containerView.frame.origin.x+5, 5, 35,35);
     doneBtn2.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
     [doneBtn2 addTarget:self action:@selector(customMsgBtnTapped:) forControlEvents:UIControlEventTouchUpInside];
     [doneBtn2 setBackgroundImage:optionBtnBackground forState:UIControlStateNormal];
@@ -298,6 +423,8 @@
 -(void)resignTextView {
     
     if ([textView.text length] > 0) {
+        
+        [self tapRecognized:nil];
         
         if ([NetworkError checkNetwork]) {
             
@@ -314,13 +441,27 @@
             
             if (isGroup == YES) {
                 
-                [idArray addObject:self.groupId];
+                [idArray addObject:[self.dataDict objectForKey:@"id"]];
                 
                 dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:textView.text, @"text", idArray, @"group", nil];
             }
             else {
                 
-                [idArray addObject:self.recipientId];
+                if ([self.dataDict objectForKey:@"reciepents"] != nil) {
+                    
+                    NSMutableArray *recipientArray = [[self.dataDict objectForKey:@"reciepents"] mutableCopy];
+                    NSMutableDictionary *recipientDict = [recipientArray objectAtIndex:0];
+                    
+                    [idArray addObject:[recipientDict objectForKey:@"id"]];
+                    
+                    recipientArray = nil;
+                    recipientDict = nil;
+                }
+                else {
+                    
+                    [idArray addObject:[self.dataDict objectForKey:@"id"]];
+                }
+                    
                 
                 dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:textView.text, @"text", idArray, @"recipients", nil];
             }
@@ -343,50 +484,29 @@
     }
 }
 
+#pragma mark Text Msg Model Class Methods
+
 -(void)didTextMsgSentSuccessfully:(NSMutableArray *)responseArray {
     
+    [self tapRecognized:nil];
+
     NSString *chat_Message = textView.text;
     textView.text = @"";
-    NSDate *date = [NSDate date];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"hh:mm a"];
     
-    NSString *rowNumber = [NSString stringWithFormat:@"%d",(int)chatsArray.count];
+    [self adddBubbledata:ktextByme mtext:chat_Message mFromName:@"" mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSeding];
     
-    [self adddBubbledata:ktextByme mtext:chat_Message mtime:[formatter stringFromDate:date] mimage:Uploadedimage.image msgstatus:kStatusSeding];
-    
-    formatter = nil;
-    
-    [self performSelector:@selector(messageSent:) withObject:rowNumber afterDelay:2.0];
-
     [self removeLoader];
 }
 
 -(void)didTextMsgSentFailed:(ASIHTTPRequest *)therequest {
+    
+    NSLog(@"Msg Sent Failed...");
     
     [self removeLoader];
 }
 
 #pragma mark -
 #pragma mark UIButton Action Methods
-
--(IBAction)messageSent:(id)sender
-{
-    [self.view endEditing:YES];
-
-    //NSLog(@"row = %@", sender);
-    SPHChatData *feed_data = [[SPHChatData alloc]init];
-    feed_data = [chatsArray objectAtIndex:[sender intValue]];
-    feed_data.messagestatus = @"Sent";
-    [chatsArray replaceObjectAtIndex:[sender intValue] withObject:feed_data ];
-    
-    NSIndexPath* rowToReload = [NSIndexPath indexPathForRow:[sender intValue] inSection:0];
-    NSArray* rowsToReload = [NSArray arrayWithObjects:rowToReload, nil];
-    [self.sphChatTable reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
-    
-    feed_data = nil;
-    rowsToReload = nil;
-}
 
 -(IBAction)uploadImage:(id)sender
 {
@@ -407,21 +527,35 @@
 -(IBAction)transparentBtnTapped:(id)sender {
     
     if (isGroup == YES) {
+        
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"GroupProfileStoryboard" bundle:nil];
         GroupProfileViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"GroupProfile"];
-        viewController.propertyStr = self.propertyStr;
-        viewController.groupId = [groupId intValue];
-        viewController.threadIdStr = self.threadIdStr;
+        viewController.propertyStr = [self.dataDict objectForKey:@"name"];
+        viewController.groupId = [[self.dataDict objectForKey:@"id"] intValue];
+        viewController.threadIdStr = [self.dataDict objectForKey:@"id"];
+        viewController.isGroupJoined = self.isGroupJoined;
+        viewController.descriptionStr = [self.dataDict objectForKey:@"description"];
         [self.navigationController pushViewController:viewController animated:YES];
     }
     else {
         
+        NSMutableArray *recipientArray = [[self.dataDict objectForKey:@"reciepents"] mutableCopy];
+        NSMutableDictionary *recipientDict = [recipientArray objectAtIndex:0];
+
+        NSMutableDictionary *userDict = [[NSMutableDictionary alloc] init];
+        [userDict setObject:[recipientDict objectForKey:@"firstName"] forKey:@"firstName"];
+        [userDict setObject:[recipientDict objectForKey:@"id"] forKey:@"id"];
+        [userDict setObject:[recipientDict objectForKey:@"lastName"] forKey:@"lastName"];
+        [userDict setObject:[recipientDict objectForKey:@"name"] forKey:@"name"];
+        
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ProfileStoryboard" bundle:nil];
         ProfileViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Profile"];
-        viewController.recepientStr = self.recipientStr;
-        viewController.recepientIdStr = self.recipientId;
-        viewController.threadIdStr = self.threadIdStr;
-        viewController.propertyStr = propertyStr;
+        viewController.userDict = [userDict mutableCopy];
+        
+        userDict = nil;
+        recipientDict = nil;
+        recipientArray = nil;
+        
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
@@ -432,6 +566,65 @@
     actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     actionSheet.tag = 1;
     [actionSheet showInView:self.view];
+}
+
+- (IBAction)joinBtnTapped:(id)sender {
+    
+    if ([NetworkError checkNetwork]) {
+        
+        [self showLoaderWithTitle:@"Joining Group..."];
+        
+        if (self.getGroupsModelClass == nil) {
+            
+            self.getGroupsModelClass = [[GetGroupsModelClass alloc] init];
+            self.getGroupsModelClass.delegate = self;
+        }
+        
+        [self.getGroupsModelClass joinUnJoinGroupRequest:[[self.dataDict objectForKey:@"id"] intValue] url:Join_URL];
+    }
+    else {
+        
+        [self showAlertViewWithTitle:NSLocalizedString(@"NO_INTERNET_ALERT_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_ALERT_MESSAGE", nil)];
+        
+        return;
+    }
+}
+
+#pragma mark -
+#pragma mark Groups Model Classes Delegate
+
+-(void)didGetGroupsSuccessfully:(NSMutableArray *)groupArray {
+        
+    [self removeLoader];
+}
+
+-(void)didGetGroupsFailed:(ASIHTTPRequest *)therequest {
+    
+    [self removeLoader];
+}
+
+-(void)didJoinUnJoinGroupSuccessfully {
+    
+    joinBtn.hidden = YES;
+    
+    self.sphChatTable.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 45);
+
+    [self removeLoader];
+}
+
+-(void)didJoinUnJoinGroupFailed:(ASIHTTPRequest *)therequest {
+    
+    [self removeLoader];
+}
+
+-(void)didGroupDeletedSuccessfully {
+    
+    [self removeLoader];
+}
+
+-(void)didGroupDeletedFailed:(ASIHTTPRequest *)therequest {
+    
+    [self removeLoader];
 }
 
 #pragma mark - UIActionSheet Delegate Methods
@@ -526,6 +719,8 @@
 -(void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
+    [self tapRecognized:nil];
+
     NSString *mediaType = [info
                            objectForKey:UIImagePickerControllerMediaType];
     
@@ -557,59 +752,73 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         // Code here to support video if enabled
     }
     
-    [self performSelector:@selector(uploadToServer) withObject:nil afterDelay:0.0];
+    [self uploadToServer];
     
     mediaType = nil;
 }
 
 -(void)uploadToServer
 {
-    NSString *chat_Message = textView.text;
-    textView.text = @"";
+    NSData* imageData = [Common resizeImageData:Uploadedimage.image];
+    NSString *streamBase64 = [ASIHTTPRequest base64forData:imageData];
     
-    NSString *rowNumber = [NSString stringWithFormat:@"%d",(int)chatsArray.count];
+    if (Uploadedimage.image != nil && streamBase64 != nil) {
     
-    /*if ([NetworkError checkNetwork]) {
-        
-        [self showLoaderWithTitle:@"Sending..."];
-        
-        if (self.textMsgModelClass == nil) {
+        if ([NetworkError checkNetwork]) {
             
-            self.textMsgModelClass = [[TextMsg alloc] init];
-            self.textMsgModelClass.delegate = self;
-        }
-        
-        NSMutableArray *idArray = [[NSMutableArray alloc] init];
-        NSMutableDictionary *dict = nil;
-        
-        if (isGroup == YES) {
+            [self showLoaderWithTitle:@"Sending..."];
             
-            [idArray addObject:self.groupId];
+            if (self.imgMsgModelClass == nil) {
+                
+                self.imgMsgModelClass = [[ImageMsg alloc] init];
+                self.imgMsgModelClass.delegate = self;
+            }
             
-            dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:textView.text, @"text", idArray, @"group", nil];
+            NSMutableArray *idArray = [[NSMutableArray alloc] init];
+            NSMutableDictionary *mediaDict = nil;
+            NSMutableDictionary *mediaDictPayload = nil;
+
+            mediaDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:streamBase64, @"stream",@"image/jpg",@"mimeType", nil];
+            
+            if (isGroup == YES) {
+                
+                [idArray addObject:[self.dataDict objectForKey:@"id"]];
+                
+                mediaDictPayload = [NSMutableDictionary dictionaryWithObjectsAndKeys:mediaDict, @"media",idArray, @"group", nil];
+            }
+            else {
+                
+                if ([self.dataDict objectForKey:@"reciepents"] != nil) {
+                    
+                    NSMutableArray *recipientArray = [[self.dataDict objectForKey:@"reciepents"] mutableCopy];
+                    NSMutableDictionary *recipientDict = [recipientArray objectAtIndex:0];
+                    
+                    [idArray addObject:[recipientDict objectForKey:@"id"]];
+                    
+                    recipientArray = nil;
+                    recipientDict = nil;
+                }
+                else {
+                    
+                    [idArray addObject:[self.dataDict objectForKey:@"id"]];
+                }
+                
+                mediaDictPayload = [NSMutableDictionary dictionaryWithObjectsAndKeys:mediaDict, @"media", idArray, @"recipients", nil];
+            }
+            
+            [self.imgMsgModelClass sendImageMsgRequest:mediaDictPayload];
+            
+            idArray = nil;
+            mediaDict = nil;
+            mediaDictPayload = nil;
         }
         else {
             
-            [idArray addObject:self.recipientId];
+            [self showAlertViewWithTitle:NSLocalizedString(@"NO_INTERNET_ALERT_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_ALERT_MESSAGE", nil)];
             
-            dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:textView.text, @"text", idArray, @"recipients", nil];
+            return;
         }
-        
-        [self.textMsgModelClass sendTextMsgRequest:dict];
-        
-        idArray = nil;
-        dict = nil;
     }
-    else {
-        
-        [self showAlertViewWithTitle:NSLocalizedString(@"NO_INTERNET_ALERT_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_ALERT_MESSAGE", nil)];
-        
-        return;
-    }*/
-    
-    [self adddBubbledata:kImageByme mtext:chat_Message mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSeding];
-    
-    [self performSelector:@selector(messageSent:) withObject:rowNumber afterDelay:1.0];
 }
 
 
@@ -629,6 +838,21 @@ finishedSavingWithError:(NSError *)error
     }
 }
 
+#pragma mark Image Msg Model Class Methods
+
+-(void)didImageMsgSentSuccessfully:(NSMutableArray *)responseArray {
+    
+    textView.text = @"";
+    
+    [self adddBubbledata:kImageByme mtext:@"" mFromName:@"" mtime:nil mimage:Uploadedimage.image msgstatus:kStatusSeding];
+    
+    [self removeLoader];
+}
+
+-(void)didImageMsgSentFailed:(ASIHTTPRequest *)therequest {
+    
+}
+
 #pragma mark -
 #pragma mark UITableView Delegate Methods
 
@@ -645,7 +869,7 @@ finishedSavingWithError:(NSError *)error
     if ([feed_data.messageType isEqualToString:ktextByme])
     {
         float cellHeight;
-        // text
+        //text
         NSString *messageText = feed_data.messageText;
         //
         CGSize boundingSize = CGSizeMake(messageWidth-20, 10000000);
@@ -696,7 +920,7 @@ finishedSavingWithError:(NSError *)error
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 
 {
-    SPHChatData *feed_data = [[SPHChatData alloc]init];
+    SPHChatData *feed_data = [[SPHChatData alloc] init];
     feed_data = [chatsArray objectAtIndex:indexPath.row];
     
     static NSString *CellIdentifier1 = @"Cell1";
@@ -713,7 +937,6 @@ finishedSavingWithError:(NSError *)error
         }
         
         [cell SetCellData:feed_data targetedView:self Atrow:indexPath.row];
-        //[cell.Avatar_Image setupImageViewer];
         
         return cell;
     }
@@ -729,22 +952,32 @@ finishedSavingWithError:(NSError *)error
         }
         
         [cell SetCellData:feed_data targetedView:self Atrow:indexPath.row];
-        //[cell.Avatar_Image setupImageViewer];
+
         return cell;
     }
     
     if ([feed_data.messageType isEqualToString:kImageByme])
     {
         SPHBubbleCellImage  *cell = (SPHBubbleCellImage *)[self.sphChatTable dequeueReusableCellWithIdentifier:CellIdentifier3];
+        
         if (cell == nil)
         {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"SPHBubbleCellImage" owner:self options:nil];
             cell = [topLevelObjects objectAtIndex:0];
         }
         //[cell SetCellData:feed_data];
-        //[cell.Avatar_Image setupImageViewer];
-        cell.message_Image.image=Uploadedimage.image;
+        
+        if (feed_data.messageTime == nil) {
+            
+            cell.message_Image.image = Uploadedimage.image;
+        }
+        else {
+            
+            [cell.message_Image sd_setImageWithURL:[NSURL URLWithString:feed_data.messageTime] placeholderImage:[UIImage imageNamed:PLACEHOLDER_IMAGE_MSG]];
+        }
+        
         [cell.message_Image setupImageViewer];
+        
         return cell;
     }
     
@@ -757,9 +990,17 @@ finishedSavingWithError:(NSError *)error
     }
     
     [cell SetCellData:feed_data];
-    //[cell.Avatar_Image setupImageViewer];
+
+    if (feed_data.messageTime == nil) {
+        
+        cell.message_Image.image = Uploadedimage.image;
+    }
+    else {
+        
+        [cell.message_Image sd_setImageWithURL:[NSURL URLWithString:feed_data.messageTime] placeholderImage:[UIImage imageNamed:PLACEHOLDER_IMAGE_MSG]];
+    }
+
     [cell.message_Image setupImageViewer];
-    cell.message_Image.image = Uploadedimage.image;
     
     feed_data = nil;
     
@@ -767,16 +1008,17 @@ finishedSavingWithError:(NSError *)error
 }
 
 
--(void)adddBubbledata:(NSString*)messageType  mtext:(NSString*)messagetext mtime:(NSString*)messageTime mimage:(UIImage*)messageImage  msgstatus:(NSString*)status;
+-(void)adddBubbledata:(NSString*)messageType mtext:(NSString*)messagetext mFromName:(NSString*)fromNameText mtime:(NSString*)messageTime mimage:(UIImage*)messageImage  msgstatus:(NSString*)status;
 {
     SPHChatData *feed_data = [[SPHChatData alloc]init];
+    
     feed_data.messageText = messagetext;
     feed_data.messageImageURL = messagetext;
     feed_data.messageImage = messageImage;
     feed_data.messageTime = messageTime;
     feed_data.messageType = messageType;
     feed_data.messagestatus = status;
-    
+    feed_data.messagesfrom = fromNameText;
     
     NSArray *insertIndexPaths = [NSArray arrayWithObject:
                                  [NSIndexPath indexPathForRow:
@@ -788,35 +1030,38 @@ finishedSavingWithError:(NSError *)error
     [[self sphChatTable] insertRowsAtIndexPaths:insertIndexPaths
                                withRowAnimation:UITableViewRowAnimationNone];
     
-    [self performSelector:@selector(scrollTableview) withObject:nil afterDelay:0.1];
+    [self scrollTableview];
     
     feed_data = nil;
     insertIndexPaths = nil;
 }
 
--(void)adddBubbledataatIndex:(NSInteger)rownum messagetype:(NSString*)messageType  mtext:(NSString*)messagetext mtime:(NSString*)messageTime mimage:(UIImage*)messageImage  msgstatus:(NSString*)status;
+-(void)adddBubbledataatIndex:(NSInteger)rownum messagetype:(NSString*)messageType  mtext:(NSString*)messagetext mtime:(NSString*)messageTime mimage:(UIImage*)messageImage msgstatus:(NSString*)status;
 {
-    SPHChatData *feed_data=[[SPHChatData alloc]init];
-    feed_data.messageText=messagetext;
-    feed_data.messageImageURL=messagetext;
-    feed_data.messageImage=messageImage;
-    feed_data.messageTime=messageTime;
-    feed_data.messageType=messageType;
-    feed_data.messagestatus=status;
-    [chatsArray  replaceObjectAtIndex:rownum withObject:feed_data];
+    SPHChatData *feed_data = [[SPHChatData alloc]init];
+    feed_data.messageText = messagetext;
+    feed_data.messageImageURL = messagetext;
+    feed_data.messageImage = messageImage;
+    feed_data.messageTime = messageTime;
+    feed_data.messageType = messageType;
+    feed_data.messagestatus = status;
+    
+    [chatsArray replaceObjectAtIndex:rownum withObject:feed_data];
     
     NSIndexPath* rowToReload = [NSIndexPath indexPathForRow:rownum inSection:0];
     NSArray* rowsToReload = [NSArray arrayWithObjects:rowToReload, nil];
     
     [self.sphChatTable reloadRowsAtIndexPaths:rowsToReload withRowAnimation:UITableViewRowAnimationNone];
     
-    [self performSelector:@selector(scrollTableview) withObject:nil afterDelay:0.1];
+    [self scrollTableview];
     
     feed_data = nil;
     rowsToReload = nil;
 }
 
 -(void)tapRecognized:(UITapGestureRecognizer *)tapGR {
+    
+    [textView resignFirstResponder];
     
     [self.view endEditing:YES];
 }
@@ -828,11 +1073,6 @@ finishedSavingWithError:(NSError *)error
 
 #pragma mark -
 #pragma mark Keyboard related methods
-
--(void)dismissKeyboard
-{
-    [self.view endEditing:YES];
-}
 
 -(void)scrollTableview
 {
@@ -848,7 +1088,7 @@ finishedSavingWithError:(NSError *)error
 -(void) keyboardWillShow:(NSNotification *)note
 {
     if (chatsArray.count > 2)
-        [self performSelector:@selector(scrollTableview) withObject:nil afterDelay:0.0];
+        [self scrollTableview];
     
     // get keyboard size and loctaion
     CGRect keyboardBounds;
@@ -900,6 +1140,35 @@ finishedSavingWithError:(NSError *)error
     [UIView commitAnimations];
 }
 
+- (BOOL)growingTextViewShouldBeginEditing:(HPGrowingTextView *)growingTextView {
+    
+    if (isGroup == YES) {
+        
+        if (self.isGroupJoined == 1) {
+            
+            return YES;
+        }
+        else {
+            
+            CABasicAnimation *shake = [CABasicAnimation animationWithKeyPath:@"position"];
+            [shake setDuration:0.1];
+            [shake setRepeatCount:2];
+            [shake setAutoreverses:YES];
+            [shake setFromValue:[NSValue valueWithCGPoint:
+                                 CGPointMake(joinBtn.center.x - 5,joinBtn.center.y)]];
+            [shake setToValue:[NSValue valueWithCGPoint:
+                               CGPointMake(joinBtn.center.x + 5, joinBtn.center.y)]];
+            [joinBtn.layer addAnimation:shake forKey:@"position"];
+            
+            return NO;
+        }
+    }
+    else {
+        
+        return YES;
+    }
+}
+
 - (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
 {
     float diff = (growingTextView.frame.size.height - height);
@@ -907,70 +1176,6 @@ finishedSavingWithError:(NSError *)error
     r.size.height -= diff;
     r.origin.y += diff;
     containerView.frame = r;
-}
-
-#pragma mark -
-#pragma mark Search Bar
-
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    
-    SearchBar.showsCancelButton = YES;
-    
-    return YES;
-}
-
-- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
-    
-    //Remove all objects first.
-    if ([filterArray count] > 0) {
-        [filterArray removeAllObjects];
-        filterArray = nil;
-    }
-    
-    filterArray = [[NSMutableArray alloc] init];
-    
-    if([searchText length] > 0) {
-        searching = YES;
-        
-        [self searchTableView];
-    }
-    else {
-        searching = NO;
-        
-        [self.sphChatTable reloadData];
-    }
-}
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
-{
-    [SearchBar resignFirstResponder];
-}
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar {
-    
-    searching = NO;
-    
-    SearchBar.showsCancelButton = NO;
-    
-    // Make the keyboard go away.
-    [SearchBar resignFirstResponder];
-    
-    //Remove all objects first.
-    if ([filterArray count] > 0) {
-        [filterArray removeAllObjects];
-        filterArray = nil;
-    }
-    
-    SearchBar.text = @"";
-    
-    [self.sphChatTable reloadData];
-}
-
-- (void) searchTableView {
-    
-    //NSString *searchText = SearchBar.text;
-    
-    [self.sphChatTable reloadData];
 }
 
 - (void)buildTextViewFromString:(NSString *)localizedString

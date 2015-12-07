@@ -22,7 +22,7 @@
         self.nsqueue = [[ASINetworkQueue alloc] init];
     }
     
-    NSURL *loginUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PRODUCTION_BASE_URL, Login_URL]];
+    NSURL *loginUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PRODUCTION_BASE_URL, Create_User_URL]];
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:loginUrl];
     [request setDelegate:self];
@@ -31,8 +31,8 @@
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     NSString *postString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
-    NSLog(@"Login Post String:- %@", postString);
-    NSLog(@"Login URL :- %@", loginUrl);
+    NSLog(@"Create User Post String:- %@", postString);
+    NSLog(@"Create User URL :- %@", loginUrl);
     
     [request appendPostData:[postString dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -47,8 +47,8 @@
 
 -(void)didFinishWithLoginRequest:(ASIHTTPRequest *)request
 {
-    NSLog(@"Login Status Code:- %d",request.responseStatusCode);
-    NSLog(@"Login response :- %@",request.responseString);
+    NSLog(@"Create User Status Code:- %d",request.responseStatusCode);
+    NSLog(@"Create User response :- %@",request.responseString);
     
     NSError *error = [request error];
     

@@ -32,8 +32,8 @@
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     NSString *postString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
-    NSLog(@"Create Group Post String:- %@", postString);
-    NSLog(@"Create Group URL :- %@", createGroupUrl);
+    //NSLog(@"Create Group Post String:- %@", postString);
+    //NSLog(@"Create Group URL :- %@", createGroupUrl);
     
     [request appendPostData:[postString dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -96,10 +96,10 @@
     [request setPropShelfHeaders];
     [request setRequestMethod:POST];
 
-    NSString* postString = [NSString stringWithFormat:Join_Unjoin_Group_Payload, groupId];
+    NSString*postString = [NSString stringWithFormat:Join_Unjoin_Group_Payload, groupId];
 
-    NSLog(@"Get Group User Post String:- %@", postString);
-    NSLog(@"Get Group User URL :- %@", groupUserUrl);
+    //NSLog(@"Get Group User Post String:- %@", postString);
+    //NSLog(@"Get Group User URL :- %@", groupUserUrl);
     
     [request appendPostData:[postString dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -115,7 +115,7 @@
 -(void)didFinishWithGetGroupUserRequest:(ASIHTTPRequest *)request
 {
     NSLog(@"Get Group User Status Code:- %d",request.responseStatusCode);
-    NSLog(@"Get Group User response :- %@",request.responseString);
+    //NSLog(@"Get Group User response :- %@",request.responseString);
     
     NSError *error = [request error];
     

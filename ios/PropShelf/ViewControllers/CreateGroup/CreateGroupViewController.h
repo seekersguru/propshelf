@@ -12,7 +12,7 @@
 
 #import "LocationModelClass.h"
 
-@interface CreateGroupViewController : BaseViewController <CreateGroupModelClassDelegate, LocationModelClassDelegate> {
+@interface CreateGroupViewController : BaseViewController <CreateGroupModelClassDelegate, LocationModelClassDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
     
     IBOutlet UITextField *txtGroupName;
     IBOutlet UITextField *txtCity;
@@ -20,7 +20,8 @@
     IBOutlet UITextField *descriptionPlaceHolder;
     IBOutlet UITextView *description;
     IBOutlet UIButton *createGroupBtn;
-    
+    IBOutlet UIButton *groupPicBtn;
+
     BOOL isCity, isLocation;
 }
 
@@ -28,5 +29,6 @@
 @property (nonatomic,strong) LocationModelClass *locationModelClass;
 
 -(IBAction)createGroupBtnTapped:(id)sender;
+-(IBAction)groupPicBtnTapped:(id)sender;
 
 @end

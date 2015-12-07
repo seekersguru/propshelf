@@ -142,9 +142,9 @@ static NSString *const kSignOutAlertConfirmTitle = @"Continue";
     NSLog(@"authorizationTokenKey : %@",[GPPSignIn sharedInstance].authentication.accessToken);
     NSLog(@"Email : %@",[GPPSignIn sharedInstance].authentication.userEmail);*/
 
-    //NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[GPPSignIn sharedInstance].userEmail,@"email", [GPPSignIn sharedInstance].authentication.accessToken, @"userName", @"google", @"source", person.name.givenName, @"first_name", person.name.familyName, @"last_name",  nil];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[GPPSignIn sharedInstance].userEmail,@"email", @"google", @"source", person.name.givenName, @"first_name", person.name.familyName, @"last_name",  nil];
 
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[GPPSignIn sharedInstance].userEmail,@"email", [GPPSignIn sharedInstance].authentication.accessToken, @"userName", @"google", @"source", @"Test", @"first_name", @"Test", @"last_name",  nil];
+    //NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Test10@gmail.com",@"email", @"google", @"source", @"Test10", @"first_name", @"Test10", @"last_name",  nil];
     
     [self callMobileVerificationView:dict];
     
@@ -244,7 +244,7 @@ static NSString *const kSignOutAlertConfirmTitle = @"Continue";
              NSLog(@"Cancelled");
          } else {
              NSLog(@"Logged in");
-             NSLog(@"token : %@",result.token);
+             //NSLog(@"token : %@",result.token);
              
              if ([FBSDKAccessToken currentAccessToken]) {
                  
@@ -256,8 +256,8 @@ static NSString *const kSignOutAlertConfirmTitle = @"Continue";
                           /*NSLog(@"fetched user:%@", [FBSDKAccessToken currentAccessToken].tokenString);
                           NSLog(@"fetched user:%@", result);
                           NSLog(@"%@",result[@"email"]);*/
-
-                          NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:result[@"email"], @"email", [FBSDKAccessToken currentAccessToken].tokenString, @"userName", @"facebook", @"source", result[@"first_name"], @"first_name", result[@"last_name"], @"last_name",  nil];
+                          
+                          NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:result[@"email"], @"email", @"facebook", @"source", result[@"first_name"], @"first_name", result[@"last_name"], @"last_name",  nil];
                           
                           [self callMobileVerificationView:dict];
                       }
@@ -277,7 +277,7 @@ static NSString *const kSignOutAlertConfirmTitle = @"Continue";
         
         NSLog(@"%s","success called!");
         
-        [self showLoaderWithTitle:@"Login In..."];
+        [self showLoaderWithTitle:@"Logging in..."];
 
         LISDKSession *session = [[LISDKSessionManager sharedInstance] session];
         //NSLog(@"value=%@ isvalid=%@",[session value],[session isValid] ? @"YES" : @"NO");
@@ -296,14 +296,14 @@ static NSString *const kSignOutAlertConfirmTitle = @"Continue";
                 NSData *data = [response.data dataUsingEncoding:NSUTF8StringEncoding];
                 id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
                 
-                NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[json objectForKey:@"emailAddress"], @"email", session.accessToken.accessTokenValue, @"userName", @"linkedin", @"source", [json objectForKey:@"firstName"], @"first_name", [json objectForKey:@"lastName"], @"last_name",  nil];
+                NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[json objectForKey:@"emailAddress"], @"email", @"linkedin", @"source", [json objectForKey:@"firstName"], @"first_name", [json objectForKey:@"lastName"], @"last_name",  nil];
                 
                 [self callMobileVerificationView:dict];
             }
             error:^(LISDKAPIError *apiError) {
                 // do something with error
                                                       
-                NSLog(@"%s %@","error called! ", [apiError description]);
+                    NSLog(@"%s %@","error called! ", [apiError description]);
                 }
 
              ];
@@ -320,6 +320,8 @@ static NSString *const kSignOutAlertConfirmTitle = @"Continue";
     userDict = [dict mutableCopy];
     
     [self performSegueWithIdentifier:@"MobileVerification" sender:self];
+    
+    [self removeLoader];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

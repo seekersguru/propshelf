@@ -8,7 +8,11 @@
 
 #import "CreateGroupViewController.h"
 
-@interface CreateGroupViewController () <UIPickerViewDataSource, UIPickerViewDelegate>
+#import <AssetsLibrary/AssetsLibrary.h>
+
+#import <MobileCoreServices/MobileCoreServices.h>
+
+@interface CreateGroupViewController () <UIPickerViewDataSource, UIPickerViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic,strong) UIPickerView *providerPickerView;
 @property (nonatomic,strong) NSMutableArray *cityArray;
@@ -27,8 +31,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.title = NSLocalizedString(@"CREATE_GROUP", nil);
+    self.title = NSLocalizedString(@"CREATE_GROUP_NAV_TITLE", nil);
     
+    groupPicBtn.layer.cornerRadius = 30.0;
+    groupPicBtn.layer.masksToBounds = YES;
+
     [[description layer] setBorderColor:[[UIColor colorWithRed:229.0/255.0 green:229.0/255.0 blue:229.0/255.0 alpha:1.0] CGColor]];
     [[description layer] setBorderWidth:1.0];
     [[description layer] setCornerRadius:5.0];
@@ -43,6 +50,8 @@
 -(void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
+    
+    self.navigationController.navigationBarHidden = NO;
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -180,6 +189,8 @@
         
         if ([NetworkError checkNetwork]) {
             
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isNewCreated"];
+            
             [self showLoaderWithTitle:@"Creating Group..."];
             
             if (self.createGroupModelClass == nil) {
@@ -190,13 +201,30 @@
             
             NSMutableDictionary *dict = nil;
             
+            NSData* imageData = [Common resizeImageData:groupPicBtn.imageView.image];
+            NSString *streamBase64 = [ASIHTTPRequest base64forData:imageData];
+
             if ([description.text length] > 0) {
                 
-                dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", description.text, @"description", nil];
+                if (streamBase64 == nil) {
+                    
+                    dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", description.text, @"description", nil];
+                }
+                else {
+                    
+                    dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", description.text, @"description", streamBase64, @"group_pic", nil];
+                }
             }
             else {
                
-                dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", nil];
+                if (streamBase64 == nil) {
+                    
+                    dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", nil];
+                }
+                else {
+                    
+                    dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", streamBase64, @"group_pic", nil];
+                }
             }
             
             [self.createGroupModelClass createGroupRequest:dict];
@@ -214,6 +242,115 @@
         
         return;
     }
+}
+
+-(IBAction)groupPicBtnTapped:(id)sender {
+    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose Exiting Photo", nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    actionSheet.tag = 0;
+    [actionSheet showInView:self.view];
+}
+
+
+#pragma mark - UIActionSheet Delegate Methods
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        return;
+    }
+    
+    if (actionSheet.tag == 0) {
+        
+        switch (buttonIndex) {
+            case 0://Camera Take Photo or Video
+                
+                if([UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront|UIImagePickerControllerCameraDeviceRear]){
+                    
+                    UIImagePickerController *imgPickerController = [[UIImagePickerController alloc] init];
+                    imgPickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+                    //For Video --> //ipc.mediaTypes = [[NSArray alloc] initWithObjects: (NSString *) kUTTypeMovie,(NSString *) kUTTypeImage, nil];
+                    imgPickerController.allowsEditing = NO;
+                    imgPickerController.showsCameraControls = YES;
+                    imgPickerController.delegate = self;
+                    
+                    [self presentViewController:imgPickerController animated:YES completion:nil];
+                }
+                else{
+                    
+                    [Common showAlertWithTitle:NSLocalizedString(@"ERROR_ALERT_TITLE", nil) andMessage:NSLocalizedString(@"CAMERA_UNAVAILABLE", nil)];
+                }
+                
+                break;
+            case 1: {
+                
+                if ([UIImagePickerController isSourceTypeAvailable:
+                     UIImagePickerControllerSourceTypeSavedPhotosAlbum])
+                {
+                    UIImagePickerController *imagePicker =
+                    [[UIImagePickerController alloc] init];
+                    imagePicker.delegate = self;
+                    imagePicker.sourceType =
+                    UIImagePickerControllerSourceTypePhotoLibrary;
+                    imagePicker.mediaTypes = [NSArray arrayWithObjects:
+                                              (NSString *) kUTTypeImage,
+                                              nil];
+                    imagePicker.allowsEditing = NO;
+                    [self presentViewController:imagePicker animated:YES completion:nil];
+                }
+            }
+                break;
+            default:
+                
+                break;
+        }
+    }
+    else {
+        
+    }
+}
+
+#pragma mark -
+#pragma mark UIImagePicker Methods
+
+-(void)imagePickerControllerDidCancel:
+(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    picker = nil;
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary *)info
+{    
+    NSString *mediaType = [info
+                           objectForKey:UIImagePickerControllerMediaType];
+    
+    
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    
+    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
+        UIImage *image = [info
+                          objectForKey:UIImagePickerControllerOriginalImage];
+        
+        
+        [groupPicBtn setImage:[Common resizeImage:image] forState:UIControlStateNormal];
+        
+        //NSData* imageData = [Common resizeImageData:image];
+        //NSString *streamBase64 = [ASIHTTPRequest base64forData:imageData];
+        
+        image = nil;
+    }
+    else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
+    {
+        // Code here to support video if enabled
+    }
+        
+    mediaType = nil;
 }
 
 #pragma mark - Create Group Model Class Delegate

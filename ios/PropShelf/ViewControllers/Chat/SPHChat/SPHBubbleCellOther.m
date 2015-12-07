@@ -45,13 +45,12 @@
     UIViewAutoresizingFlexibleLeftMargin |
     UIViewAutoresizingFlexibleBottomMargin;
 
-    UILabel *messagelbl=[[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width - itemTextSize.size.width - 17, 5, itemTextSize.size.width+8, textHeight+2)];
+    UILabel *messagelbl = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width - itemTextSize.size.width - 20, 5, itemTextSize.size.width+8, textHeight+2)];
     [self.contentView addSubview:messagelbl];
     messagelbl.text = messageText;
     messagelbl.numberOfLines = 0;
     messagelbl.textAlignment = NSTextAlignmentJustified;
     messagelbl.font = [UIFont fontWithName:@"Helvetica Neue" size:12.0];
-    messagelbl.backgroundColor = [UIColor clearColor];
     messagelbl.tag = indexRow;
     messagelbl.backgroundColor = [UIColor clearColor];
     messagelbl.autoresizingMask = UIViewAutoresizingFlexibleRightMargin |

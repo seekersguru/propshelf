@@ -27,7 +27,15 @@
     self.title = NSLocalizedString(@"SETTINGS_NAV_TITLE", nil);
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+    
+    self.navigationController.navigationBarHidden = NO;
+}
+
 #pragma mark - tablview datasource required methods
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     return 3;
@@ -100,8 +108,12 @@
     }
     else if (indexPath.row == 2) {
         
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"PropShelf" message:@"Are you sure you want to logout?" delegate:nil cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-        [alertView show];
+        [[NSUserDefaults standardUserDefaults] setObject:nil forKey:ADMIN_DETAILS];
+        
+        [APP_DELEGATE addMainStoryBoard];
+        
+        /*UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"PropShelf" message:@"Are you sure you want to logout?" delegate:nil cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        [alertView show];*/
     }
 }
 

@@ -9,10 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface BaseViewController : UIViewController {
-
-    BOOL isProfilePending;
     
-    NSString *personalInfoCountryId;
 }
 
 @property (nonatomic, strong) UIAlertView *alertView;

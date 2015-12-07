@@ -20,6 +20,8 @@
 
 #import "ChatViewController.h"
 
+#import "SignInViewController.h"
+
 @interface AppDelegate ()
 
 @end
@@ -96,6 +98,19 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+-(void)addMainStoryBoard {
+
+    [[GPPSignIn sharedInstance] signOut];
+    
+    [self.window removeFromSuperview];
+
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    SignInViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"SignIn"];
+
+    self.window.rootViewController = viewController;
+    [self.window makeKeyAndVisible];
+}
+
 -(void)addWallView {
     
     [self.window removeFromSuperview];
@@ -118,7 +133,7 @@
     [self.window makeKeyAndVisible];
 }
 
--(void)addChatScreen:(NSString *)threadId titleStr:(NSString *)navTitle {
+-(void)addChatScreen:(NSMutableDictionary *)dataDict {
 
     [self.window removeFromSuperview];
     
@@ -127,10 +142,10 @@
     
     UIStoryboard *storyboard2 = [UIStoryboard storyboardWithName:@"ChatStoryboard" bundle:nil];
     ChatViewController *viewController2 = [storyboard2 instantiateViewControllerWithIdentifier:@"Chat"];
-    viewController2.threadIdStr = threadId;
     viewController2.isCameFromWall = NO;
-    viewController2.propertyStr = navTitle;
-
+    viewController2.dataDict = dataDict;
+    viewController2.isGroup = NO;
+    
     NSArray *stack = [NSArray arrayWithObjects:viewController1, viewController2, nil];
 
     UINavigationController* navigation = [[UINavigationController alloc] init];

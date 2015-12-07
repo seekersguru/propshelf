@@ -31,5 +31,9 @@
 #import "BaseViewController.h"
 #import "ASINetworkQueue.h"
 #import "SvGifView.h"
+#import "SDWebImageManager.h"
+#import "UIImageView+WebCache.h"
+#import "CreateGroupViewController.h"
+#import "SettingsViewController.h"
 
 #endif

@@ -121,7 +121,7 @@
         
     if ([txtCountryCode.text length] > 0 && [txtMobileNumber.text length] > 0) {
         
-        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[userDict objectForKey:@"email"], @"email", txtMobileNumber.text, @"userName", @"mobile", @"source", [userDict objectForKey:@"first_name"], @"first_name", [userDict objectForKey:@"last_name"], @"last_name",  nil];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[userDict objectForKey:@"email"], @"email", txtMobileNumber.text, @"mobile", [userDict objectForKey:@"source"], @"source", [userDict objectForKey:@"first_name"], @"first_name", [userDict objectForKey:@"last_name"], @"last_name",  nil];
         
         [self callLoginWebService:dict];
     }
@@ -141,7 +141,7 @@
         
         if ([NetworkError checkNetwork]) {
             
-            [self showLoaderWithTitle:@"Login In..."];
+            [self showLoaderWithTitle:@"Logging in..."];
             
             if (self.loginModelClass == nil) {
                 
@@ -149,7 +149,7 @@
                 self.loginModelClass.delegate = self;
             }
             
-            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtMobileNumber.text,@"userName", txtOTP.text, @"otp", nil];
+            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[userDict objectForKey:@"email"],@"userName", txtOTP.text, @"otp", nil];
             
             [self.loginModelClass verifyOTPRequest:dict];
         }
@@ -209,7 +209,7 @@
     
     if ([NetworkError checkNetwork]) {
         
-        [self showLoaderWithTitle:@"Login In..."];
+        [self showLoaderWithTitle:@"Logging in..."];
         
         if (self.loginModelClass == nil) {
             
@@ -231,12 +231,12 @@
 
 -(void)didOTPVerifiedSuccessfully {
     
-    [self removeLoader];
-    
     [[NSUserDefaults standardUserDefaults] setObject:txtMobileNumber.text forKey:@"mobileNumber"];
     [[NSUserDefaults standardUserDefaults] setObject:txtCountryCode.text forKey:@"CountryCode"];
 
     [APP_DELEGATE addWallView];
+    
+    [self removeLoader];
 }
 
 -(void)didOTPVerifiedFailed:(ASIHTTPRequest *)therequest {
@@ -245,7 +245,7 @@
 }
 
 -(void)didLoginSuccessfully:(NSMutableDictionary *)responseDict {
-    
+
     if ([[responseDict objectForKey:@"message"] isEqualToString:@"Otp sent please verifiy"] && [[responseDict objectForKey:@"CAN_RESEND_OTP"] intValue] == 1) {
         
         [self removeLoader];
@@ -256,13 +256,34 @@
     }
     else if ([[responseDict objectForKey:@"success"] isEqualToString:@"User created, mobile otp required"]) {
         
-        [self removeLoader];
-        
         [[NSUserDefaults standardUserDefaults] setValue:[responseDict objectForKey:@"otp_testing_ask_to_delete_ecurity_issue"] forKey:@"Test_OTP"];
+                
+        if (self.loginModelClass == nil) {
+            
+            self.loginModelClass = [[LoginModelClass alloc] init];
+            self.loginModelClass.delegate = self;
+        }
         
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[userDict objectForKey:@"email"], @"userName", [[NSUserDefaults standardUserDefaults] objectForKey:@"Test_OTP"], @"otp", nil];
+        
+        [self.loginModelClass verifyOTPRequest:dict];
+
+        /*[self removeLoader];
+
         [self showAlertViewWithTitle:NSLocalizedString(@"APP_POPUP_TITLE", nil) message:NSLocalizedString(@"VERIFY_OTP", nil)];
         
-        return;
+        return;*/
+    }
+    else if ([[responseDict objectForKey:@"success"] isEqualToString:@"User logged in successfuly"]) {
+        
+        [[NSUserDefaults standardUserDefaults] setObject:txtMobileNumber.text forKey:@"mobileNumber"];
+        [[NSUserDefaults standardUserDefaults] setObject:txtCountryCode.text forKey:@"CountryCode"];
+        
+        [Common saveLoggedInUserInfoFromDictionary:responseDict];
+
+        [APP_DELEGATE addWallView];
+        
+        [self removeLoader];
     }
     else if ([[responseDict objectForKey:@"message"] isEqualToString:@"Source should be one of linkedin, facebook or google or mobile"]) {
         
@@ -294,8 +315,6 @@
     }
     
     [self removeLoader];
-    
-    [APP_DELEGATE addWallView];
 }
 
 -(void)didLoginFailed:(ASIHTTPRequest *)therequest {

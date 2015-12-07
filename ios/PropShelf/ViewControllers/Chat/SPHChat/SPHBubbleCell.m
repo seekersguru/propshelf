@@ -38,7 +38,7 @@
                                           attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica Neue" size:12.0]}
                                              context:nil];
     
-    NSString *name = @"Guru";
+    NSString *name = feed_data.messagesfrom;
     
     if ([messageText length] < [name length]) {
         
@@ -55,31 +55,30 @@
     [bubbleImage setFrame:CGRectMake(0,5, itemTextSize.size.width+24, textHeight+30)];
     bubbleImage.tag=56;
     
-    NSInteger aRedValue = arc4random()%255;
+    /*NSInteger aRedValue = arc4random()%255;
     NSInteger aGreenValue = arc4random()%255;
     NSInteger aBlueValue = arc4random()%255;
     
-    UIColor *randColor = [UIColor colorWithRed:aRedValue/255.0f green:aGreenValue/255.0f blue:aBlueValue/255.0f alpha:1.0f];
+    UIColor *randColor = [UIColor colorWithRed:aRedValue/255.0f green:aGreenValue/255.0f blue:aBlueValue/255.0f alpha:1.0f];*/
     
-    UILabel *namelbl=[[UILabel alloc]initWithFrame:CGRectMake(16,5,itemTextSize.size.width+10, 30)];
+    UILabel *namelbl = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, itemTextSize.size.width+10, 30)];
     [self.contentView addSubview:namelbl];
     namelbl.text = name;
-    namelbl.textColor = randColor;
+    namelbl.textColor = [UIColor blackColor]; //randColor
     namelbl.numberOfLines = 1;
-    namelbl.textAlignment=NSTextAlignmentJustified;
-    namelbl.font=[UIFont fontWithName:@"Helvetica Neue" size:12.0];
-    namelbl.backgroundColor=[UIColor clearColor];
-    namelbl.tag=indexRow;
+    namelbl.textAlignment = NSTextAlignmentJustified;
+    namelbl.font = [UIFont fontWithName:@"Helvetica Neue" size:12.0];
+    namelbl.backgroundColor = [UIColor clearColor];
+    namelbl.tag = indexRow;
 
-    UILabel *messagelbl=[[UILabel alloc]initWithFrame:CGRectMake(16,25,itemTextSize.size.width, textHeight+2)];
+    UILabel *messagelbl=[[UILabel alloc]initWithFrame:CGRectMake(20, 26, itemTextSize.size.width, textHeight+2)];
     [self.contentView addSubview:messagelbl];
     messagelbl.text = messageText;
     messagelbl.numberOfLines = 0;
-    messagelbl.textAlignment=NSTextAlignmentJustified;
-    messagelbl.backgroundColor=[UIColor clearColor];
-    messagelbl.font=[UIFont fontWithName:@"Helvetica Neue" size:12.0];
-    messagelbl.tag=indexRow;
-    messagelbl.textColor=[UIColor whiteColor];
+    messagelbl.textAlignment = NSTextAlignmentJustified;
+    messagelbl.backgroundColor = [UIColor clearColor];
+    messagelbl.font = [UIFont fontWithName:@"Helvetica Neue" size:12.0];
+    messagelbl.tag = indexRow;
     
     messagelbl = nil;
     bubbleImage = nil;

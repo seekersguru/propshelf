@@ -28,6 +28,8 @@
 
 #define PRODUCTION_BASE_URL @"http://surveyglass.in/api/"
 
+#define IMAGE_MSG_BASE_URL @"http://surveyglass.in/"
+
 //--------------- Server Request Methods ---------------
 
 #define POST @"POST"
@@ -56,9 +58,19 @@
 #define IMAGE_MSG_TYPE @"image/jpg"
 #define TEXT_MSG_TYPE @"text/plain"
 
+#define PLACEHOLDER_IMAGE_MSG @"placeholder_png"
+
+#define PLACEHOLDER_USER_IMAGE @"profilepic"
+
 #define ADMIN_DETAILS @"ADMIN_DETAILS"
 
+#define Get_Profile_URL @"profile/"
+
+#define Update_Profile_URL @"update_profile/"
+
 #define Get_Thread_URL @"thread/"
+
+#define Get_Group_Info_URL @"group_info/"
 
 #define Get_Wall_URL @"wall/"
 
@@ -68,13 +80,21 @@
 
 #define Join_Unjoin_Group_Payload @"{\"group_id\":%d}"
 
+#define Group_Id_Payload @"{\"group_id\":\"%@\"}"
+
 #define Delete_Group_URL @"group/%d"
+
+#define Get_User_Details_URL @"user_info/"
+
+#define User_Id_Payload @"{\"user_id\":\"%@\"}"
 
 #define Get_Group_User_URL @"group_user/"
 
 #define Create_Group_URL @"group/"
 
 #define Create_Message_URL @"message/"
+
+#define Search_Group_URL @"search_group/"
 
 #define Groups_URL @"groups/"
 
@@ -86,7 +106,7 @@
 
 #define Cities_URL @"cities/"
 
-#define Login_URL @"create_user/"
+#define Create_User_URL @"create_user/"
 
 #define VerifyOTP_URL @"verify_otp/"
 

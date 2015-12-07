@@ -127,6 +127,22 @@
     return sessionId;
 }
 
++(NSString*)getThreadId:(NSString *)loggendInUserId selectedUserId:(NSString *)userId {
+    
+    NSString *threadId = @"";
+
+    if ([loggendInUserId intValue] < [userId intValue]) {
+        
+        threadId = [NSString stringWithFormat:@"user_%@_%@", loggendInUserId, userId];
+    }
+    else {
+     
+        threadId = [NSString stringWithFormat:@"user_%@_%@", userId, loggendInUserId];
+    }
+    
+    return threadId;
+}
+
 #pragma mark -  show Alert
 
 + (void)showAlertWithTitle:(NSString*)title andMessage:(NSString*)msg {

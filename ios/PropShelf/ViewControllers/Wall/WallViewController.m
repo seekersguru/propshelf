@@ -16,10 +16,6 @@
 
 #import "ChatViewController.h"
 
-#import "CreateGroupViewController.h"
-
-#import "SettingsViewController.h"
-
 @interface WallViewController () <UIActionSheetDelegate>
 
 @end
@@ -29,6 +25,8 @@
 @synthesize getGroupsModelClass;
 
 @synthesize getWallModelClass;
+
+@synthesize groupSearchModelClass;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -54,7 +52,18 @@
     
     self.navigationController.navigationBarHidden = NO;
 
+    self.tableView.contentInset = UIEdgeInsetsMake(-1.0f, 0.0f, 0.0f, 0.0);
+
     [self.tableView setContentOffset:CGPointMake(0, 44)];
+    
+    BOOL isNewCreated = [[NSUserDefaults standardUserDefaults] boolForKey:@"isNewCreated"];
+    
+    if (isNewCreated == YES) {
+        
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"isNewCreated"];
+        
+        [self getGroupsDetails];
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -153,6 +162,8 @@
 
 - (IBAction)segmentedControlDidChange:(UISegmentedControl *)sender {
     
+    searching = NO;
+
     if (sender.selectedSegmentIndex == 0) {
         
         isChat = YES;
@@ -227,6 +238,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if(searching) {
+        
+        return filterArray.count;
+    }
+
     if (isChat == YES) {
         
         return chatArray.count;
@@ -253,8 +269,8 @@
             if ([oneObject isKindOfClass:[ChatCustomCell class]])
                 chatCell = (ChatCustomCell *)oneObject;
         
-        chatCell.selectionStyle = UITableViewCellSelectionStyleGray;
-        chatCell.accessoryType = UITableViewCellAccessoryNone;
+        chatCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        chatCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         self.tableView.backgroundColor = [UIColor clearColor];
     }
@@ -273,7 +289,7 @@
             if ([oneObject isKindOfClass:[GroupCustomCell class]])
                 groupCell = (GroupCustomCell *)oneObject;
         
-        groupCell.selectionStyle = UITableViewCellSelectionStyleGray;
+        groupCell.selectionStyle = UITableViewCellSelectionStyleNone;
         groupCell.accessoryType = UITableViewCellAccessoryNone;
         
         self.tableView.backgroundColor = [UIColor clearColor];
@@ -289,52 +305,64 @@
         
         NSMutableDictionary *dict = [chatArray objectAtIndex:indexPath.row];
         
-        /*UIFont *font = [UIFont systemFontOfSize:12.0f];
-        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        paragraphStyle.paragraphSpacing = 0.25 * font.lineHeight;
-        NSDictionary *attributes = @{NSFontAttributeName:font,
-                                     
-                                     NSForegroundColorAttributeName:[UIColor lightGrayColor],
-                                     
-                                     NSBackgroundColorAttributeName:[UIColor clearColor],
-                                     
-                                     NSParagraphStyleAttributeName:paragraphStyle,
-                                     };
-        
-        NSMutableAttributedString *tmpAttrTxt = [[NSMutableAttributedString alloc] initWithAttributedString:chatCell.titlelbl.attributedText];
-        
-        [tmpAttrTxt addAttributes:attributes range:NSMakeRange(15, 21)];
-        
-        chatCell.titlelbl.attributedText = tmpAttrTxt;*/
-        
-        //paragraphStyle = nil;
-        //tmpAttrTxt = nil;
+        NSMutableArray *recipientArray = [[dict objectForKey:@"reciepents"] mutableCopy];
+
+        NSMutableDictionary *recipientDict = [recipientArray objectAtIndex:0];
         
         if([[dict objectForKey:@"isGroup"] boolValue] == YES) {
             
             chatCell.imgIcon.image = [UIImage imageNamed:@"Group-icon"];
             
-            NSMutableArray *recipientArray = [[dict objectForKey:@"reciepents"] mutableCopy];
-            
-            if (recipientArray.count > 0) {
-                
-                NSMutableDictionary *recipientDict = [recipientArray objectAtIndex:0];
-                
-                chatCell.titlelbl.text = [recipientDict objectForKey:@"name"];
-            }
+            chatCell.titlelbl.text = [recipientDict objectForKey:@"name"];
         }
         else {
 
             chatCell.imgIcon.image = [UIImage imageNamed:@"profile-1"];
             
-            chatCell.titlelbl.text = [dict objectForKey:@"text"];
+            //chatCell.titlelbl.text = [dict objectForKey:@"text"];
+            
+            NSString *txtStr = [NSString stringWithFormat:@"%@  %@", [recipientDict objectForKey:@"firstName"], [dict objectForKey:@"text"]];
+            
+            UIFont *font = [UIFont systemFontOfSize:12.0f];
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            paragraphStyle.paragraphSpacing = 0.25 * font.lineHeight;
+            NSDictionary *attributes = @{NSFontAttributeName:font,
+                                         
+                                         NSForegroundColorAttributeName:[UIColor lightGrayColor],
+                                         
+                                         NSBackgroundColorAttributeName:[UIColor clearColor],
+                                         
+                                         NSParagraphStyleAttributeName:paragraphStyle,
+                                         };
+            
+            NSMutableAttributedString *tmpAttrTxt = [[NSMutableAttributedString alloc] initWithString:txtStr];
+            
+            [tmpAttrTxt addAttributes:attributes range:NSMakeRange([[recipientDict objectForKey:@"firstName"] length], [[dict objectForKey:@"text"] length] + 2)];
+
+            chatCell.titlelbl.attributedText = tmpAttrTxt;
+            
+            paragraphStyle = nil;
+            tmpAttrTxt = nil;
         }
 
+        dict = nil;
+        recipientDict = nil;
+        recipientArray = nil;
+        
         return chatCell;
     }
     else {
 
-        NSMutableDictionary *dict = [[groupsArray objectAtIndex:indexPath.row] mutableCopy];
+        NSMutableArray *msgFilterArray = nil;
+        
+        if(searching)
+            msgFilterArray = filterArray;
+        
+        else {
+            msgFilterArray = groupsArray;
+        }
+
+        NSMutableDictionary *dict = [[msgFilterArray objectAtIndex:indexPath.row] mutableCopy];
 
         CGFloat borderWidth = 1.0f;
         
@@ -381,46 +409,39 @@
 
         if ([[dict objectForKey:@"isGroup"] boolValue] == YES) {
             
-            viewController.threadIdStr = [dict objectForKey:@"threadId"];
-            
             NSMutableArray *recipientArray = [[dict objectForKey:@"reciepents"] mutableCopy];
             
-            if (recipientArray.count > 0) {
-                
-                NSMutableDictionary *recipientDict = [recipientArray objectAtIndex:0];
-                
-                viewController.propertyStr = [recipientDict objectForKey:@"name"];
-                viewController.groupId = [recipientDict objectForKey:@"id"];
-            }
+            NSMutableDictionary *recipientDict = [recipientArray objectAtIndex:0];
+
+            NSMutableDictionary *groupDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[dict objectForKey:@"description"], @"description", [recipientDict objectForKey:@"name"], @"name", [recipientDict objectForKey:@"id"], @"id", @"1", @"joined", nil];
+            
+            [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:@"isGroupJoined"];
+            viewController.dataDict = groupDict;
         }
         else {
             
-            viewController.threadIdStr = [dict objectForKey:@"threadId"];
-            viewController.propertyStr = [dict objectForKey:@"text"];
-            
-            NSMutableArray *recipientArray = [[dict objectForKey:@"reciepents"] mutableCopy];
-            
-            if (recipientArray.count > 0) {
-                
-                NSMutableDictionary *recipientDict = [recipientArray objectAtIndex:0];
-                
-                viewController.recipientId = [recipientDict objectForKey:@"id"];
-                viewController.recipientStr = [recipientDict objectForKey:@"name"];
-            }
+            viewController.dataDict = dict;
         }
         
         viewController.isGroup = [[dict objectForKey:@"isGroup"] boolValue];
-        
         [self.navigationController pushViewController:viewController animated:YES];
     }
     else {
         
-        NSMutableDictionary *dict = [[groupsArray objectAtIndex:indexPath.row] mutableCopy];
+        NSMutableArray *msgFilterArray = nil;
+        
+        if(searching)
+            msgFilterArray = filterArray;
+        
+        else {
+            msgFilterArray = groupsArray;
+        }
 
+        NSMutableDictionary *dict = [[msgFilterArray objectAtIndex:indexPath.row] mutableCopy];
+        
+        [[NSUserDefaults standardUserDefaults] setInteger:[[dict objectForKey:@"joined"] intValue] forKey:@"isGroupJoined"];
         viewController.isGroup = YES;
-        viewController.propertyStr = [dict objectForKey:@"name"];
-        viewController.threadIdStr = [dict objectForKey:@"id"];
-        viewController.groupId = [dict objectForKey:@"id"];
+        viewController.dataDict = dict;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
@@ -448,7 +469,16 @@
 
         if ([NetworkError checkNetwork]) {
             
-            NSMutableDictionary *dict = [groupsArray objectAtIndex:indexPath.row];
+            NSMutableArray *msgFilterArray = nil;
+            
+            if(searching)
+                msgFilterArray = filterArray;
+            
+            else {
+                msgFilterArray = groupsArray;
+            }
+
+            NSMutableDictionary *dict = [msgFilterArray objectAtIndex:indexPath.row];
 
             [self showLoaderWithTitle:@"Deleting Group..."];
             
@@ -479,7 +509,16 @@
     
     selectedIndexPath = indexPath.row;
     
-    NSMutableDictionary *dict = [[groupsArray objectAtIndex:indexPath.row] mutableCopy];
+    NSMutableArray *msgFilterArray = nil;
+    
+    if(searching)
+        msgFilterArray = filterArray;
+    
+    else {
+        msgFilterArray = groupsArray;
+    }
+
+    NSMutableDictionary *dict = [[msgFilterArray objectAtIndex:indexPath.row] mutableCopy];
 
     if ([[dict objectForKey:@"joined"] intValue] == 0) {
         NSLog(@"Not Joined");
@@ -537,6 +576,7 @@
     return YES;
 }
 
+/*
 - (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
     
     //Remove all objects first.
@@ -548,6 +588,39 @@
     filterArray = [[NSMutableArray alloc] init];
     
     if([searchText length] > 0) {
+        
+        segmentedControl.selectedSegmentIndex = 1;
+        
+        isChat = NO;
+        searching = YES;
+        
+        [self searchTableView];
+    }
+    else {
+        searching = NO;
+        
+        [self.tableView reloadData];
+    }
+}
+*/
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [SearchBar resignFirstResponder];
+    
+    //Remove all objects first.
+    if ([filterArray count] > 0) {
+        [filterArray removeAllObjects];
+        filterArray = nil;
+    }
+    
+    filterArray = [[NSMutableArray alloc] init];
+    
+    if([searchBar.text length] > 0) {
+        
+        segmentedControl.selectedSegmentIndex = 1;
+        
+        isChat = NO;
         searching = YES;
         
         [self searchTableView];
@@ -559,12 +632,11 @@
     }
 }
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
-{
-    [SearchBar resignFirstResponder];
-}
-
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar {
+    
+    isChat = YES;
+    
+    segmentedControl.selectedSegmentIndex = 0;
     
     searching = NO;
     
@@ -586,9 +658,44 @@
 
 - (void) searchTableView {
     
-    //NSString *searchText = SearchBar.text;
+    NSString *searchText = SearchBar.text;
+    
+    if ([NetworkError checkNetwork]) {
+        
+        [self showLoaderWithTitle:@"Searching..."];
+        
+        if (self.groupSearchModelClass == nil) {
+            
+            self.groupSearchModelClass = [[GroupSearch alloc] init];
+            self.groupSearchModelClass.delegate = self;
+        }
+        
+        NSMutableDictionary *dictPayload = [NSMutableDictionary dictionaryWithObjectsAndKeys:searchText, @"search_string", @"1", @"page_no", nil];
+
+        [self.groupSearchModelClass searchGroupRequest:dictPayload];
+    }
+    else {
+        
+        [self showAlertViewWithTitle:NSLocalizedString(@"NO_INTERNET_ALERT_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_ALERT_MESSAGE", nil)];
+        
+        return;
+    }
+}
+
+#pragma mark -
+#pragma mark SearchGroup Model Classes Delegate
+
+-(void)didSearchGroupSuccessfully:(NSMutableArray *)responseArray {
+ 
+    filterArray = [responseArray mutableCopy];
     
     [self.tableView reloadData];
+    
+    [self removeLoader];
+}
+
+-(void)didSearchGroupFailed:(ASIHTTPRequest *)therequest {
+    
 }
 
 #pragma mark -
@@ -627,7 +734,16 @@
 
 -(void)didJoinUnJoinGroupSuccessfully {
     
-    NSMutableDictionary *dict = [[groupsArray objectAtIndex:selectedIndexPath] mutableCopy];
+    NSMutableArray *msgFilterArray = nil;
+    
+    if(searching)
+        msgFilterArray = filterArray;
+    
+    else {
+        msgFilterArray = groupsArray;
+    }
+
+    NSMutableDictionary *dict = [[msgFilterArray objectAtIndex:selectedIndexPath] mutableCopy];
 
     if ([[dict objectForKey:@"joined"] intValue] == 0) {
         
@@ -661,8 +777,6 @@
 
 -(void)didGroupDeletedFailed:(ASIHTTPRequest *)therequest {
     
-    [self.tableView reloadData];
-
     [self removeLoader];
 }
 

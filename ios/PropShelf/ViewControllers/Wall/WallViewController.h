@@ -12,7 +12,9 @@
 
 #import "Wall.h"
 
-@interface WallViewController : BaseViewController <GetGroupsModelClassDelegate, GetWallModelClassDelegate> {
+#import "GroupSearch.h"
+
+@interface WallViewController : BaseViewController <GetGroupsModelClassDelegate, GetWallModelClassDelegate, SearchGroupClassDelegate> {
     
     IBOutlet UISegmentedControl *segmentedControl;
     IBOutlet UISearchBar *SearchBar;
@@ -31,6 +33,7 @@
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic,strong) GetGroupsModelClass *getGroupsModelClass;
 @property (nonatomic,strong) Wall *getWallModelClass;
+@property (nonatomic,strong) GroupSearch *groupSearchModelClass;
 
 - (IBAction)segmentedControlDidChange:(UISegmentedControl *)sender;
 

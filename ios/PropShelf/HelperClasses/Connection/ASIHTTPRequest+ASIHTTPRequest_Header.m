@@ -20,9 +20,9 @@
         //[self addRequestHeader:AUTHENTICATION_KEY value:[@"Basic " stringByAppendingString:[Common getCurrentSessionId]]];
         
         [self addRequestHeader:AUTHENTICATION_KEY value:[Common getCurrentSessionId]];
-        //[self addRequestHeader:CONTENT_TYPE_FIELD value:CONTENT_TYPE_JSON_VALUE];
+        [self addRequestHeader:CONTENT_TYPE_FIELD value:CONTENT_TYPE_JSON_VALUE];
         
-        NSLog(@"Header : %@ - Values : %@", AUTHENTICATION_KEY, [Common getCurrentSessionId]);
+        //NSLog(@"Header : %@ - Values : %@", AUTHENTICATION_KEY, [Common getCurrentSessionId]);
     }
 }
 

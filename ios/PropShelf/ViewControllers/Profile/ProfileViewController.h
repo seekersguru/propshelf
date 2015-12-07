@@ -8,7 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileViewController : UIViewController {
+#import "GetUserDetails.h"
+
+#import "GetGroupsModelClass.h"
+
+@interface ProfileViewController : BaseViewController <GetUserDetailsModelClassDelegate, GetGroupsModelClassDelegate> {
     
     IBOutlet UIView *view1;
     IBOutlet UIView *view2;
@@ -18,16 +22,19 @@
     IBOutlet UILabel *titlelbl2;
     IBOutlet UILabel *mobileNumber;
 
+    int selectedIndexPath;
+
     NSMutableArray *groupsArray;
     NSMutableArray *recentPostArray;
+    
+    NSString *threadId;
 }
 
 @property (nonatomic, weak) IBOutlet UITableView* groupTableView;
 @property (nonatomic, weak) IBOutlet UITableView* postTableView;
-@property (nonatomic, strong) IBOutlet NSString *recepientStr;
-@property (nonatomic, strong) IBOutlet NSString *recepientIdStr;
-@property (nonatomic, strong) IBOutlet NSString *threadIdStr;
-@property (nonatomic, strong) IBOutlet NSString *propertyStr;
+@property (nonatomic, strong) GetUserDetails *getUserDetails;
+@property (nonatomic, strong) NSMutableDictionary *userDict;
+@property (nonatomic,strong) GetGroupsModelClass *getGroupsModelClass;
 
 -(IBAction)backBtnTapped:(id)sender;
 -(IBAction)callBtnTapped:(id)sender;

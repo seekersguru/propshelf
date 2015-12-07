@@ -29,7 +29,7 @@
     [request setPropShelfHeaders];
     [request setRequestMethod:GET];
     
-    NSLog(@"Get Cities URL :- %@", citiesUrl);
+    //NSLog(@"Get Cities URL :- %@", citiesUrl);
     
     [request setDidFinishSelector:@selector(didFinishWithGetCitiesRequest:)];
     [request setDidFailSelector:@selector(didFailWithGetCitiesRequest:)];
@@ -43,7 +43,7 @@
 -(void)didFinishWithGetCitiesRequest:(ASIHTTPRequest *)request
 {
     NSLog(@"Get Cities Status Code:- %d",request.responseStatusCode);
-    NSLog(@"Get Cities response :- %@",request.responseString);
+    //NSLog(@"Get Cities response :- %@",request.responseString);
     
     NSError *error = [request error];
     
@@ -90,8 +90,8 @@
     
     NSString* postString = [NSString stringWithFormat:Get_Location_Payload, selectedCity];
     
-    NSLog(@"Get Locations Post String:- %@", postString);
-    NSLog(@"Get Locations URL :- %@", locationsUrl);
+    //NSLog(@"Get Locations Post String:- %@", postString);
+    //NSLog(@"Get Locations URL :- %@", locationsUrl);
     
     [request appendPostData:[postString dataUsingEncoding:NSUTF8StringEncoding]];
     [request setDidFinishSelector:@selector(didFinishWithGetLocationsRequest:)];
@@ -106,7 +106,7 @@
 -(void)didFinishWithGetLocationsRequest:(ASIHTTPRequest *)request
 {
     NSLog(@"Get Locations Status Code:- %d",request.responseStatusCode);
-    NSLog(@"Get Locations response :- %@",request.responseString);
+    //NSLog(@"Get Locations response :- %@",request.responseString);
     
     NSError *error = [request error];
     

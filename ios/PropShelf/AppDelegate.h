@@ -13,7 +13,8 @@
 @property (strong, nonatomic) UIWindow *window;
 
 -(void)addWallView;
--(void)addChatScreen:(NSString *)threadId titleStr:(NSString *)navTitle;
+-(void)addChatScreen:(NSMutableDictionary *)dataDict;
+-(void)addMainStoryBoard;
 
 @end
 

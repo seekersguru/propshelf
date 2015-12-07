@@ -31,8 +31,8 @@
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     NSString *postString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
-    NSLog(@"SendTextMsg Post String:- %@", postString);
-    NSLog(@"SendTextMsg URL :- %@", sendTextMsgUrl);
+    //NSLog(@"SendTextMsg Post String:- %@", postString);
+    //NSLog(@"SendTextMsg URL :- %@", sendTextMsgUrl);
     
     [request appendPostData:[postString dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -48,7 +48,7 @@
 -(void)didFinishWithSendTextMsgRequest:(ASIHTTPRequest *)request
 {
     NSLog(@"SendTextMsg Status Code:- %d",request.responseStatusCode);
-    NSLog(@"SendTextMsg response :- %@",request.responseString);
+    //NSLog(@"SendTextMsg response :- %@",request.responseString);
     
     NSError *error = [request error];
     
@@ -63,6 +63,10 @@
         if (responseDict != nil) {
             
             [delegate didTextMsgSentSuccessfully:[[responseDict objectForKey:@"json"] mutableCopy]];
+        }
+        else {
+            
+            [delegate didTextMsgSentFailed:request];
         }
     }
     else {

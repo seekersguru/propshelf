@@ -43,7 +43,7 @@
 -(void)didFinishWithGetWallRequest:(ASIHTTPRequest *)request
 {
     NSLog(@"Get Wall Status Code:- %d",request.responseStatusCode);
-    NSLog(@"Get Wall response :- %@",request.responseString);
+    //NSLog(@"Get Wall response :- %@",request.responseString);
     
     NSError *error = [request error];
     

@@ -48,7 +48,7 @@
 -(void)didFinishWithGetGroupsRequest:(ASIHTTPRequest *)request
 {
     NSLog(@"Get Groups Status Code:- %d",request.responseStatusCode);
-    NSLog(@"Get Groups response :- %@",request.responseString);
+    //NSLog(@"Get Groups response :- %@",request.responseString);
     
     NSError *error = [request error];
     
@@ -95,8 +95,8 @@
     
     NSString* postString = [NSString stringWithFormat:Join_Unjoin_Group_Payload, groupId];
     
-    NSLog(@"JoinUnJoinGroup Post String:- %@", postString);
-    NSLog(@"JoinUnJoinGroup URL :- %@", groupUrl);
+    //NSLog(@"JoinUnJoinGroup Post String:- %@", postString);
+    //NSLog(@"JoinUnJoinGroup URL :- %@", groupUrl);
     
     [request appendPostData:[postString dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -112,7 +112,7 @@
 -(void)didFinishWithJoinUnJoinGroupRequest:(ASIHTTPRequest *)request
 {
     NSLog(@"JoinUnJoinGroup Status Code:- %d",request.responseStatusCode);
-    NSLog(@"JoinUnJoinGroup response :- %@",request.responseString);
+    //NSLog(@"JoinUnJoinGroup response :- %@",request.responseString);
     
     NSError *error = [request error];
     
