@@ -454,7 +454,7 @@
     }
     else {
        
-        return YES;
+        return NO;
     }
 }
 
@@ -777,6 +777,8 @@
 
 -(void)didGroupDeletedFailed:(ASIHTTPRequest *)therequest {
     
+    [self.tableView reloadData];
+
     [self removeLoader];
 }
 

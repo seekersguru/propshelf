@@ -21,6 +21,9 @@
                                 <state key="normal" title="Join Group">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="joinBtnTapped:" destination="wdb-hB-AfD" eventType="touchUpInside" id="e04-E6-93b"/>
+                                </connections>
                             </button>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" id="vhH-QE-z67">
                                 <rect key="frame" x="50" y="387" width="137" height="128"/>
