@@ -82,8 +82,8 @@ static const CGFloat kMinImageScale = 1.0f;
     [_doneButton addTarget:self
                     action:@selector(close:)
           forControlEvents:UIControlEventTouchUpInside];
-    [_doneButton setImage:[UIImage imageNamed:@"Done"] forState:UIControlStateNormal];
-    _doneButton.frame = CGRectMake(windowBounds.size.width - (51.0f + 9.0f),15.0f, 64.0f, 64.0f);
+    [_doneButton setBackgroundImage:[UIImage imageNamed:@"Done"] forState:UIControlStateNormal];
+    _doneButton.frame = CGRectMake(windowBounds.size.width - 38.0f, 15.0f, 32.0f, 32.0f);
     _doneButton.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_doneButton];
     _doneButton.alpha = 1.0f;

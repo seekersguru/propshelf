@@ -90,8 +90,8 @@
     
     NSString* postString = [NSString stringWithFormat:Group_Id_Payload, groupId];
     
-    //NSLog(@"Get Group Details Post String:- %@", postString);
-    //NSLog(@"Get Group Details URL :- %@", groupDetailsUrl);
+    NSLog(@"Get Group Details Post String:- %@", postString);
+    NSLog(@"Get Group Details URL :- %@", groupDetailsUrl);
     
     [request appendPostData:[postString dataUsingEncoding:NSUTF8StringEncoding]];
     

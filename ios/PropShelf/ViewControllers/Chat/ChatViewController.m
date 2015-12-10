@@ -153,7 +153,7 @@
     galleryBtn.backgroundColor = [UIColor clearColor];
     
     UIButton *whiteDotBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [whiteDotBtn setFrame:CGRectMake(0, 0, 4, 15)];
+    [whiteDotBtn setFrame:CGRectMake(0, 0, 27, 27)];
     [whiteDotBtn setBackgroundImage:[UIImage imageNamed:@"Menu-dots"] forState:UIControlStateNormal];
     [whiteDotBtn addTarget:self action:@selector(menuDotsBtnTapped:) forControlEvents:UIControlEventTouchUpInside];
     whiteDotBtn.backgroundColor = [UIColor clearColor];
@@ -175,8 +175,8 @@
 
     if (isCameFromWall == YES) {
         
-        imgXAxis = navTitleView.frame.origin.x - 80.0;
-        lblXAxis = navTitleView.frame.origin.x - 40.0;
+        imgXAxis = navTitleView.frame.origin.x - 45.0;
+        lblXAxis = navTitleView.frame.origin.x - 5.0;
     }
     else {
         
@@ -191,7 +191,7 @@
     
     // Customize the title text for *all* UINavigationBars
     UILabel *navTitle = [[UILabel alloc] init];
-    navTitle.frame = CGRectMake(lblXAxis, 2, 200, 44);
+    navTitle.frame = CGRectMake(lblXAxis, 0, 175, 44);
     
     if (isGroup == YES) {
         
@@ -221,7 +221,7 @@
     [navTitleView addSubview:navTitle];
         
     UIButton *transparentBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [transparentBtn setFrame:CGRectMake(lblXAxis, 2, 200, 44)];
+    [transparentBtn setFrame:CGRectMake(imgXAxis + 8, 0, 205, 44)];
     [transparentBtn addTarget:self action:@selector(transparentBtnTapped:) forControlEvents:UIControlEventTouchUpInside];
     transparentBtn.backgroundColor = [UIColor clearColor];
     [navTitleView addSubview:transparentBtn];
@@ -385,18 +385,18 @@
 
     [self.view addSubview:containerView];
 
-    UIImage *rawEntryBackground = [UIImage imageNamed:@""]; //MessageEntryInputField.png
+    /*UIImage *rawEntryBackground = [UIImage imageNamed:@""]; //MessageEntryInputField.png
     
     UIImage *entryBackground = [rawEntryBackground stretchableImageWithLeftCapWidth:13 topCapHeight:22];
     UIImageView *entryImageView = [[UIImageView alloc] initWithImage:entryBackground];
     entryImageView.frame = CGRectMake(47, 0, self.view.frame.size.width - 96, 45);
-    entryImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    entryImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;*/
     
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     // view hierachy
     [containerView addSubview:textView];
-    [containerView addSubview:entryImageView];
+    //[containerView addSubview:entryImageView];
     
     UIImage *sendBtnBackground = [[UIImage imageNamed:@"send"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     
@@ -518,10 +518,10 @@
 
 -(IBAction)customMsgBtnTapped:(id)sender {
     
-    UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Create Custom Message", nil];
+    /*UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Create Custom Message", nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-    actionSheet.tag = 1;
-    [actionSheet showInView:self.view];
+    actionSheet.tag = 2;
+    [actionSheet showInView:self.view];*/
 }
 
 -(IBAction)transparentBtnTapped:(id)sender {

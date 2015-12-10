@@ -53,7 +53,7 @@
     self.userName_Label.textColor = [UIColor blackColor]; //randColor;
     self.userName_Label.numberOfLines = 1;
     self.userName_Label.textAlignment = NSTextAlignmentJustified;
-    self.userName_Label.font = [UIFont fontWithName:@"Helvetica Neue" size:12.0];
+    self.userName_Label.font = [UIFont fontWithName:@"Helvetica Neue-Bold" size:12.0];
     self.userName_Label.backgroundColor = [UIColor clearColor];
 
     /*self.Avatar_Image.layer.cornerRadius = 20.0;

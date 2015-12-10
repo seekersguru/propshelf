@@ -378,30 +378,6 @@
                                             </mask>
                                         </variation>
                                     </label>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="+91" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AfJ-ji-A4C">
-                                        <rect key="frame" x="-25" y="-30" width="97" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="65" id="mP2-Ir-xHf"/>
-                                            <constraint firstAttribute="height" constant="30" id="xst-zj-kKF"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="mP2-Ir-xHf"/>
-                                                <exclude reference="xst-zj-kKF"/>
-                                            </mask>
-                                        </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
-                                            <mask key="constraints">
-                                                <include reference="mP2-Ir-xHf"/>
-                                                <include reference="xst-zj-kKF"/>
-                                            </mask>
-                                        </variation>
-                                        <connections>
-                                            <outlet property="delegate" destination="Vln-9r-rzz" id="0QM-vN-yyY"/>
-                                        </connections>
-                                    </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="10 Digit No." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VIb-gY-8r9">
                                         <rect key="frame" x="-25" y="-30" width="97" height="30"/>
                                         <constraints>
@@ -493,7 +469,7 @@
                                             </constraint>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <state key="normal" title="Verfiy">
+                                        <state key="normal" title="verify">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <variation key="default">
@@ -552,7 +528,7 @@
                                         <variation key="heightClass=regular-widthClass=compact" constant="44"/>
                                     </constraint>
                                     <constraint firstItem="VIb-gY-8r9" firstAttribute="centerX" secondItem="eCw-mo-DW0" secondAttribute="centerX" id="EXF-ZF-TK8">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="-8"/>
+                                        <variation key="heightClass=regular-widthClass=compact" constant="-46"/>
                                     </constraint>
                                     <constraint firstItem="lQK-1b-YYf" firstAttribute="top" secondItem="emA-lw-LcC" secondAttribute="bottom" constant="1" id="G0k-GW-Ror">
                                         <variation key="heightClass=regular-widthClass=compact" constant="2"/>
@@ -565,9 +541,6 @@
                                         <variation key="heightClass=regular-widthClass=compact" constant="13"/>
                                     </constraint>
                                     <constraint firstItem="IRq-ER-hPG" firstAttribute="centerX" secondItem="eCw-mo-DW0" secondAttribute="centerX" id="QnQ-u9-ScJ"/>
-                                    <constraint firstItem="AfJ-ji-A4C" firstAttribute="top" secondItem="CTH-zI-6e5" secondAttribute="bottom" constant="20" id="RQe-CJ-xG7">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="12"/>
-                                    </constraint>
                                     <constraint firstItem="CTH-zI-6e5" firstAttribute="leading" secondItem="eCw-mo-DW0" secondAttribute="leading" constant="8" id="UUg-Dv-hUV">
                                         <variation key="heightClass=regular-widthClass=compact" constant="44"/>
                                     </constraint>
@@ -586,8 +559,9 @@
                                     <constraint firstItem="emA-lw-LcC" firstAttribute="top" secondItem="VIb-gY-8r9" secondAttribute="bottom" constant="26" id="oo5-v6-0Jv">
                                         <variation key="heightClass=regular-widthClass=compact" constant="34"/>
                                     </constraint>
-                                    <constraint firstItem="VIb-gY-8r9" firstAttribute="leading" secondItem="AfJ-ji-A4C" secondAttribute="trailing" constant="8" id="vAa-fE-iYo"/>
-                                    <constraint firstItem="emA-lw-LcC" firstAttribute="leading" secondItem="VIb-gY-8r9" secondAttribute="leading" id="yUN-Mn-zCr"/>
+                                    <constraint firstItem="emA-lw-LcC" firstAttribute="leading" secondItem="VIb-gY-8r9" secondAttribute="leading" id="yUN-Mn-zCr">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="38"/>
+                                    </constraint>
                                     <constraint firstItem="8v4-P2-6Eo" firstAttribute="leading" secondItem="emA-lw-LcC" secondAttribute="trailing" constant="8" symbolic="YES" id="zY1-8Z-mUx"/>
                                     <constraint firstAttribute="bottom" secondItem="emA-lw-LcC" secondAttribute="bottom" constant="46" id="zZ1-ED-zne">
                                         <variation key="heightClass=regular-widthClass=compact" constant="51"/>
@@ -597,7 +571,6 @@
                                     <mask key="subviews">
                                         <exclude reference="IRq-ER-hPG"/>
                                         <exclude reference="CTH-zI-6e5"/>
-                                        <exclude reference="AfJ-ji-A4C"/>
                                         <exclude reference="VIb-gY-8r9"/>
                                         <exclude reference="emA-lw-LcC"/>
                                         <exclude reference="QR5-7u-jtp"/>
@@ -606,10 +579,8 @@
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="Vxp-MB-kHc"/>
-                                        <exclude reference="RQe-CJ-xG7"/>
                                         <exclude reference="EXF-ZF-TK8"/>
                                         <exclude reference="Odj-G3-Aej"/>
-                                        <exclude reference="vAa-fE-iYo"/>
                                         <exclude reference="oo5-v6-0Jv"/>
                                         <exclude reference="yUN-Mn-zCr"/>
                                         <exclude reference="zZ1-ED-zne"/>
@@ -632,7 +603,6 @@
                                     <mask key="subviews">
                                         <include reference="IRq-ER-hPG"/>
                                         <include reference="CTH-zI-6e5"/>
-                                        <include reference="AfJ-ji-A4C"/>
                                         <include reference="VIb-gY-8r9"/>
                                         <include reference="emA-lw-LcC"/>
                                         <include reference="QR5-7u-jtp"/>
@@ -641,10 +611,8 @@
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="Vxp-MB-kHc"/>
-                                        <include reference="RQe-CJ-xG7"/>
                                         <include reference="EXF-ZF-TK8"/>
                                         <include reference="Odj-G3-Aej"/>
-                                        <include reference="vAa-fE-iYo"/>
                                         <include reference="oo5-v6-0Jv"/>
                                         <include reference="yUN-Mn-zCr"/>
                                         <include reference="zZ1-ED-zne"/>
@@ -733,7 +701,6 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
                         <outlet property="sendOTPBtn" destination="QR5-7u-jtp" id="6DK-eP-oaP"/>
-                        <outlet property="txtCountryCode" destination="AfJ-ji-A4C" id="pjX-F2-WLJ"/>
                         <outlet property="txtMobileNumber" destination="VIb-gY-8r9" id="T3x-PZ-asC"/>
                         <outlet property="txtOTP" destination="emA-lw-LcC" id="z30-Wx-QVb"/>
                         <outlet property="verfiyBtn" destination="8v4-P2-6Eo" id="yDs-Wv-gzr"/>

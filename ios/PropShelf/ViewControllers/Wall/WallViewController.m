@@ -77,7 +77,7 @@
 -(void)setNavigationBarItems {
     
     UIButton *whiteDotBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [whiteDotBtn setFrame:CGRectMake(0, 0, 4, 15)];
+    [whiteDotBtn setFrame:CGRectMake(0, 0, 27, 27)];
     [whiteDotBtn setBackgroundImage:[UIImage imageNamed:@"Menu-dots"] forState:UIControlStateNormal];
     [whiteDotBtn addTarget:self action:@selector(menuDotsBtnTapped:) forControlEvents:UIControlEventTouchUpInside];
     whiteDotBtn.backgroundColor = [UIColor clearColor];

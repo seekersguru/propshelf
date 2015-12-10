@@ -67,7 +67,7 @@
     namelbl.textColor = [UIColor blackColor]; //randColor
     namelbl.numberOfLines = 1;
     namelbl.textAlignment = NSTextAlignmentJustified;
-    namelbl.font = [UIFont fontWithName:@"Helvetica Neue" size:12.0];
+    namelbl.font = [UIFont fontWithName:@"Helvetica Neue-Bold" size:12.0];
     namelbl.backgroundColor = [UIColor clearColor];
     namelbl.tag = indexRow;
 
