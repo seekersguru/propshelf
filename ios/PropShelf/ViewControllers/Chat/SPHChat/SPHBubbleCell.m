@@ -35,7 +35,7 @@
     CGSize boundingSize = CGSizeMake(messageWidth - 20, 10000000);
     CGRect itemTextSize = [messageText boundingRectWithSize:boundingSize
                                              options:NSStringDrawingUsesLineFragmentOrigin
-                                          attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica Neue" size:12.0]}
+                                          attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica Neue" size:14.0]}
                                              context:nil];
     
     NSString *name = feed_data.messagesfrom;
@@ -44,16 +44,16 @@
         
         itemTextSize = [name boundingRectWithSize:boundingSize
                                           options:NSStringDrawingUsesLineFragmentOrigin
-                                       attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica Neue" size:12.0]}
+                                       attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica Neue" size:14.0]}
                                           context:nil];
     }
 
     float textHeight = itemTextSize.size.height+7;
 
-    UIImageView *bubbleImage=[[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"Bubbletypeleft"] stretchableImageWithLeftCapWidth:21 topCapHeight:14]];
+    UIImageView *bubbleImage = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"Bubbletypeleft"] stretchableImageWithLeftCapWidth:21 topCapHeight:14]];
     [self.contentView addSubview:bubbleImage];
-    [bubbleImage setFrame:CGRectMake(0,5, itemTextSize.size.width+24, textHeight+30)];
-    bubbleImage.tag=56;
+    [bubbleImage setFrame:CGRectMake(0, 5, itemTextSize.size.width + 26, textHeight + 30)];
+    bubbleImage.tag = 56;
     
     /*NSInteger aRedValue = arc4random()%255;
     NSInteger aGreenValue = arc4random()%255;
@@ -64,12 +64,17 @@
     UILabel *namelbl = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, itemTextSize.size.width+10, 30)];
     [self.contentView addSubview:namelbl];
     namelbl.text = name;
-    namelbl.textColor = [UIColor blackColor]; //randColor
+    namelbl.textColor = [UIColor colorWithRed:247.0f/255.0f green:86.0f/255.0 blue:0.0f/255.0f alpha:1.0f]; //randColor
     namelbl.numberOfLines = 1;
     namelbl.textAlignment = NSTextAlignmentJustified;
-    namelbl.font = [UIFont fontWithName:@"Helvetica Neue-Bold" size:12.0];
+    namelbl.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
     namelbl.backgroundColor = [UIColor clearColor];
     namelbl.tag = indexRow;
+
+    self.transparentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.transparentBtn.frame = namelbl.frame;
+    self.transparentBtn.tag = indexRow;
+    [self.contentView addSubview:self.transparentBtn];
 
     UILabel *messagelbl=[[UILabel alloc]initWithFrame:CGRectMake(20, 26, itemTextSize.size.width, textHeight+2)];
     [self.contentView addSubview:messagelbl];
@@ -77,7 +82,7 @@
     messagelbl.numberOfLines = 0;
     messagelbl.textAlignment = NSTextAlignmentJustified;
     messagelbl.backgroundColor = [UIColor clearColor];
-    messagelbl.font = [UIFont fontWithName:@"Helvetica Neue" size:12.0];
+    messagelbl.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
     messagelbl.tag = indexRow;
     
     messagelbl = nil;

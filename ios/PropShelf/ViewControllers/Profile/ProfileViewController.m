@@ -30,8 +30,11 @@
     
     selectedIndexPath = 100000;
 
-    mobileNumber.textColor = [UIColor lightGrayColor];
-    
+    if ([self.userDict objectForKey:@"mobile"] != nil) {
+        
+        mobileNumber.text = [NSString stringWithFormat:@"+91 %@", [self.userDict objectForKey:@"mobile"]];
+    }
+
     recepientlbl.text = [self.userDict objectForKey:@"firstName"];
     titlelbl1.text = [NSString stringWithFormat:@"Groups %@ is part of", [self.userDict objectForKey:@"firstName"]];
     titlelbl2.text = [NSString stringWithFormat:@"Recent posts by %@", [self.userDict objectForKey:@"firstName"]];
@@ -87,8 +90,6 @@
 
 -(void)didGetUserDetailsSuccessfully:(NSMutableDictionary *)userDict {
     
-    mobileNumber.textColor = [UIColor blackColor];
-
     recentPostArray = [[userDict objectForKey:@"recent_non_media_posts"] mutableCopy];
     
     groupsArray = [[userDict objectForKey:@"groups"] mutableCopy];

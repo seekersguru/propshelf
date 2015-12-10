@@ -15,6 +15,8 @@
 
 //@property (weak, nonatomic) IBOutlet UILabel *time_Label;
 
+@property (weak, nonatomic) IBOutlet UIButton *transparentBtn;
+
 -(void)SetCellData:(SPHChatData *)feed_data targetedView:(id)ViewControllerObject Atrow:(NSInteger)indexRow;
 
 @end

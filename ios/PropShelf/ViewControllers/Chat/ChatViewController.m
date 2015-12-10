@@ -269,6 +269,8 @@
     
     //chatsArray = [chatArray mutableCopy];
     
+    [[NSUserDefaults standardUserDefaults] setObject:[chatArray mutableCopy] forKey:@"chatArray"];
+    
     [self showAllChatMsg:chatArray];
     
     [self removeLoader];
@@ -281,6 +283,8 @@
 
 -(void)didGetGroupDetailsSuccessfully:(NSMutableArray *)chatArray {
     
+    [[NSUserDefaults standardUserDefaults] setObject:[chatArray mutableCopy] forKey:@"chatArray"];
+
     [self showAllChatMsg:chatArray];
 
     [self removeLoader];
@@ -872,14 +876,14 @@ finishedSavingWithError:(NSError *)error
         //text
         NSString *messageText = feed_data.messageText;
         //
-        CGSize boundingSize = CGSizeMake(messageWidth-20, 10000000);
+        CGSize boundingSize = CGSizeMake(messageWidth - 20, 10000000);
         CGRect itemTextSize = [messageText boundingRectWithSize:boundingSize
                                                         options:NSStringDrawingUsesLineFragmentOrigin
-                                                     attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica Neue" size:12.0]}
+                                                     attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica Neue" size:14.0]}
                                                         context:nil];
         
         // plain text
-        cellHeight = itemTextSize.size.height+7;
+        cellHeight = itemTextSize.size.height + 7;
         
         feed_data = nil;
         
@@ -894,7 +898,7 @@ finishedSavingWithError:(NSError *)error
         CGSize boundingSize = CGSizeMake(messageWidth-20, 10000000);
         CGRect itemTextSize = [messageText boundingRectWithSize:boundingSize
                                                         options:NSStringDrawingUsesLineFragmentOrigin
-                                                     attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica Neue" size:12.0]}
+                                                     attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica Neue" size:14.0]}
                                                         context:nil];
         
         // plain text
@@ -931,9 +935,12 @@ finishedSavingWithError:(NSError *)error
     if ([feed_data.messageType isEqualToString:ktextByme])
     {
         SPHBubbleCellOther  *cell = (SPHBubbleCellOther *)[self.sphChatTable dequeueReusableCellWithIdentifier:CellIdentifier1];
+        
         if (cell == nil) {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"SPHBubbleCellOther" owner:self options:nil];
             cell = [topLevelObjects objectAtIndex:0];
+            
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
         [cell SetCellData:feed_data targetedView:self Atrow:indexPath.row];
@@ -948,11 +955,16 @@ finishedSavingWithError:(NSError *)error
         if (cell == nil)
         {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"SPHBubbleCell" owner:self options:nil];
+            
             cell = [topLevelObjects objectAtIndex:0];
+            
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
         [cell SetCellData:feed_data targetedView:self Atrow:indexPath.row];
 
+        [cell.transparentBtn addTarget:self action:@selector(transparentBtnTapped:event:) forControlEvents:UIControlEventTouchUpInside];
+        
         return cell;
     }
     
@@ -963,7 +975,10 @@ finishedSavingWithError:(NSError *)error
         if (cell == nil)
         {
             NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"SPHBubbleCellImage" owner:self options:nil];
+            
             cell = [topLevelObjects objectAtIndex:0];
+            
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         //[cell SetCellData:feed_data];
         
@@ -986,7 +1001,10 @@ finishedSavingWithError:(NSError *)error
     if (cell == nil)
     {
         NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"SPHBubbleCellImageOther" owner:self options:nil];
+        
         cell = [topLevelObjects objectAtIndex:0];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     [cell SetCellData:feed_data];
@@ -1057,6 +1075,25 @@ finishedSavingWithError:(NSError *)error
     
     feed_data = nil;
     rowsToReload = nil;
+}
+
+-(void) transparentBtnTapped:(id) sender event:(id)event {
+    
+    NSSet *touches = [event allTouches];
+    UITouch *touch = [touches anyObject];
+    CGPoint currentTouchPosition = [touch locationInView:self.sphChatTable];
+    NSIndexPath *indexPath = [self.sphChatTable indexPathForRowAtPoint: currentTouchPosition];
+    //NSLog(@"Selected  row:%d in section:%d",indexPath.row,indexPath.section);
+    
+    NSMutableArray *chatArray = [[[NSUserDefaults standardUserDefaults] objectForKey:@"chatArray"] mutableCopy];
+    NSMutableDictionary *dict = [chatArray objectAtIndex:indexPath.row];
+    
+    NSMutableDictionary *userDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[dict objectForKey:@"createdBy"] valueForKey:@"firstName"], @"firstName", [[dict objectForKey:@"createdBy"] valueForKey:@"lastName"], @"lastName", [[dict objectForKey:@"createdBy"] valueForKey:@"id"], @"id", @"user", @"role", [NSString stringWithFormat:@"%@ %@", [[dict objectForKey:@"createdBy"] valueForKey:@"firstName"], [[dict objectForKey:@"createdBy"] valueForKey:@"lastName"]], @"name", nil];
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ProfileStoryboard" bundle:nil];
+    ProfileViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Profile"];
+    viewController.userDict = userDict;
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 -(void)tapRecognized:(UITapGestureRecognizer *)tapGR {
