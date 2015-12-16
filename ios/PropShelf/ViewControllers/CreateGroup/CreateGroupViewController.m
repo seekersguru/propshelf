@@ -503,6 +503,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    [self didEndAnimation];
+    
     [textField resignFirstResponder];
     
     return YES;
@@ -510,6 +512,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     
+    [self didEndAnimation];
+
     if(textField.tag == 1)
     {
 
@@ -553,6 +557,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     
+    [self didEndAnimation];
+
+    if(textView.tag == 4)
+    {
+        [self didStartAnimation:70];
+    }
+
     return YES;
 }
 
@@ -567,6 +578,26 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
             descriptionPlaceHolder.hidden = NO;
         }
     }
+}
+
+#pragma mark - Animation Methods
+
+-(void)didStartAnimation:(int)withValue {
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3];
+    CGRect rect = self.view.frame;
+    rect.origin.y = rect.origin.y - withValue;
+    self.view.frame = rect;
+    [UIView commitAnimations];
+}
+
+-(void)didEndAnimation {
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3];
+    self.view.frame = CGRectMake(0, 0,self.view.frame.size.width, self.view.frame.size.height);
+    [UIView commitAnimations];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -16,7 +16,8 @@
 //@property (weak, nonatomic) IBOutlet UIImageView *Avatar_Image;
 @property (weak, nonatomic) IBOutlet UILabel *userName_Label;
 //@property (weak, nonatomic) IBOutlet UILabel *time_Label;
+@property (strong, nonatomic) IBOutlet UIButton *transparentBtn;
 
--(void)SetCellData:(SPHChatData *)feed_data;
+-(void)SetCellData:(SPHChatData *)feed_data Atrow:(NSInteger)indexRow;
 
 @end

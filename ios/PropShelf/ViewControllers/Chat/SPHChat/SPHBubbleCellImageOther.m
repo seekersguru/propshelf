@@ -26,7 +26,7 @@
     // Configure the view for the selected state
 }
 
--(void)SetCellData:(SPHChatData *)feed_data
+-(void)SetCellData:(SPHChatData *)feed_data Atrow:(NSInteger)indexRow;
 {
     NSString *name = feed_data.messagesfrom;
     
@@ -55,6 +55,12 @@
     self.userName_Label.textAlignment = NSTextAlignmentJustified;
     self.userName_Label.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
     self.userName_Label.backgroundColor = [UIColor clearColor];
+
+    self.transparentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.transparentBtn.frame = self.userName_Label.frame;
+    self.transparentBtn.tag = indexRow;
+    self.transparentBtn.backgroundColor = [UIColor clearColor];
+    [self.contentView addSubview:self.transparentBtn];
 
     /*self.Avatar_Image.layer.cornerRadius = 20.0;
     self.Avatar_Image.layer.masksToBounds = YES;

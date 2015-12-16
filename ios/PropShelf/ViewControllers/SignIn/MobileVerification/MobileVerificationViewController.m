@@ -118,12 +118,21 @@
 #pragma mark - Button Action Methods
 
 -(IBAction)sendBtnTapped:(id)sender {
+    
+    if ([txtMobileNumber.text length] > 0) {
         
-    if ([txtCountryCode.text length] > 0 && [txtMobileNumber.text length] > 0) {
-        
-        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[userDict objectForKey:@"email"], @"email", txtMobileNumber.text, @"mobile", [userDict objectForKey:@"source"], @"source", [userDict objectForKey:@"first_name"], @"first_name", [userDict objectForKey:@"last_name"], @"last_name",  nil];
-        
-        [self callLoginWebService:dict];
+        if ([txtMobileNumber.text length] == 10) {
+            
+            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[userDict objectForKey:@"email"], @"email", txtMobileNumber.text, @"mobile", [userDict objectForKey:@"source"], @"source", [userDict objectForKey:@"first_name"], @"first_name", [userDict objectForKey:@"last_name"], @"last_name",  nil];
+            
+            [self callLoginWebService:dict];
+        }
+        else {
+         
+            [self showAlertViewWithTitle:NSLocalizedString(@"APP_POPUP_TITLE", nil) message:NSLocalizedString(@"PHONE_NUMBER", nil)];
+            
+            return;
+        }
     }
     else {
         
@@ -232,7 +241,10 @@
 -(void)didOTPVerifiedSuccessfully {
     
     [[NSUserDefaults standardUserDefaults] setObject:txtMobileNumber.text forKey:@"mobileNumber"];
-    [[NSUserDefaults standardUserDefaults] setObject:txtCountryCode.text forKey:@"CountryCode"];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:@"+91" forKey:@"CountryCode"];
+
+    //[[NSUserDefaults standardUserDefaults] setObject:txtCountryCode.text forKey:@"CountryCode"];
 
     [APP_DELEGATE addWallView];
     
@@ -277,8 +289,11 @@
     else if ([[responseDict objectForKey:@"success"] isEqualToString:@"User logged in successfuly"]) {
         
         [[NSUserDefaults standardUserDefaults] setObject:txtMobileNumber.text forKey:@"mobileNumber"];
-        [[NSUserDefaults standardUserDefaults] setObject:txtCountryCode.text forKey:@"CountryCode"];
+
+        [[NSUserDefaults standardUserDefaults] setObject:@"+91" forKey:@"CountryCode"];
         
+        //[[NSUserDefaults standardUserDefaults] setObject:txtCountryCode.text forKey:@"CountryCode"];
+
         [Common saveLoggedInUserInfoFromDictionary:responseDict];
 
         [APP_DELEGATE addWallView];
@@ -388,15 +403,41 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
+    NSString* totalString = [NSString stringWithFormat:@"%@%@",textField.text,string];
+
     if (textField == txtMobileNumber) {
         
-        if ([textField.text length] > 10) {
-            
-            return NO;
+        if (range.length == 1) {
+            // Delete button was hit.. so tell the method to delete the last char.
+            textField.text = [self formatPhoneNumber:totalString deleteLastChar:YES];
+        } else {
+            textField.text = [self formatPhoneNumber:totalString deleteLastChar:NO ];
         }
+        return false;
     }
     
     return YES;
+}
+
+-(NSString*) formatPhoneNumber:(NSString*) simpleNumber deleteLastChar:(BOOL)deleteLastChar {
+    if(simpleNumber.length==0) return @"";
+    // use regex to remove non-digits(including spaces) so we are left with just the numbers
+    NSError *error = NULL;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[\\s-\\(\\)]" options:NSRegularExpressionCaseInsensitive error:&error];
+    simpleNumber = [regex stringByReplacingMatchesInString:simpleNumber options:0 range:NSMakeRange(0, [simpleNumber length]) withTemplate:@""];
+    
+    // check if the number is to long
+    if(simpleNumber.length>10) {
+        // remove last extra chars.
+        simpleNumber = [simpleNumber substringToIndex:10];
+    }
+    
+    if(deleteLastChar) {
+        // should we delete the last digit?
+        simpleNumber = [simpleNumber substringToIndex:[simpleNumber length] - 1];
+    }
+    
+    return simpleNumber;
 }
 
 - (void)didReceiveMemoryWarning {

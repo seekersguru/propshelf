@@ -112,6 +112,8 @@
 
 #define ResendOTP_URL @"resend_otp/"
 
+#define ACCEPTABLE_CHARECTERS @"0123456789."
+
 //--------------- NSUserDefaults Keys ---------------
 
 #define APP_SESSION_ID @"appSessionId"

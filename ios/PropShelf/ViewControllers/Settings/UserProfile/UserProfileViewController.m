@@ -355,7 +355,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     
-    [self didStartAnimation:160];
+    [self didStartAnimation:200];
 
     return YES;
 }

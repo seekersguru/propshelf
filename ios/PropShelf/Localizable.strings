@@ -25,6 +25,8 @@
 
 "DATA_IS_MANDATORY" = "All fileds mandatory.";
 
+"PHONE_NUMBER" = "Please enter a vaild phone number.";
+
 "VERIFY_OTP" = "Please verify OTP.";
 
 "MOBILE_DETAILS_MANDATORY" = "Please provide mobile details.";

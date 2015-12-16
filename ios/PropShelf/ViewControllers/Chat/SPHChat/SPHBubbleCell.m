@@ -74,6 +74,7 @@
     self.transparentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.transparentBtn.frame = namelbl.frame;
     self.transparentBtn.tag = indexRow;
+    self.transparentBtn.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:self.transparentBtn];
 
     UILabel *messagelbl=[[UILabel alloc]initWithFrame:CGRectMake(20, 26, itemTextSize.size.width, textHeight+2)];

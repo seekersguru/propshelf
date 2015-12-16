@@ -980,7 +980,6 @@ finishedSavingWithError:(NSError *)error
             
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
-        //[cell SetCellData:feed_data];
         
         if (feed_data.messageTime == nil) {
             
@@ -1007,7 +1006,9 @@ finishedSavingWithError:(NSError *)error
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
-    [cell SetCellData:feed_data];
+    [cell SetCellData:feed_data Atrow:indexPath.row];
+
+    [cell.transparentBtn addTarget:self action:@selector(transparentBtnTapped:event:) forControlEvents:UIControlEventTouchUpInside];
 
     if (feed_data.messageTime == nil) {
         
