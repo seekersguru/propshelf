@@ -40,7 +40,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    //self.sphChatTable.tableHeaderView = SearchBar;
+    self.keyboardIsShown = YES;
 
     joinBtn.layer.cornerRadius = 5.0f;
     joinBtn.layer.masksToBounds = YES;
@@ -49,16 +49,6 @@
     chatsArray = [NSMutableArray array];
     
     [self setUpTextFieldforIphone];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
     
     UITapGestureRecognizer *touchy = [[UITapGestureRecognizer alloc]
                                       initWithTarget:self action:@selector(tapRecognized:)];
@@ -80,6 +70,18 @@
     
     self.navigationController.navigationBarHidden = NO;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillChangeFrameNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+
+    self.keyboardIsShown = YES;
+
     self.sphChatTable.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 45);
     
     if (isGroup == YES) {
@@ -104,6 +106,10 @@
 -(void)viewWillDisappear:(BOOL)animated {
     
     [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
     
     /*if (containerView != nil) {
         containerView = nil;
@@ -514,6 +520,8 @@
 
 -(IBAction)uploadImage:(id)sender
 {
+    [self.view endEditing:YES];
+    
     UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose Exiting Photo", nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     actionSheet.tag = 0;
@@ -566,6 +574,8 @@
 
 -(IBAction)menuDotsBtnTapped:(id)sender {
     
+    [self.view endEditing:YES];
+
     UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"New Group", @"Settings", nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     actionSheet.tag = 1;

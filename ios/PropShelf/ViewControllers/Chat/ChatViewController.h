@@ -49,6 +49,7 @@
 @property (nonatomic, strong) TextMsg *textMsgModelClass;
 @property (nonatomic, strong) ImageMsg *imgMsgModelClass;
 @property (nonatomic, strong) GetGroupsModelClass *getGroupsModelClass;
+@property (assign, nonatomic) BOOL keyboardIsShown;
 
 - (IBAction)joinBtnTapped:(id)sender;
 

@@ -69,6 +69,8 @@
 -(void)viewWillDisappear:(BOOL)animated {
     
     [super viewWillDisappear:animated];
+    
+    [SearchBar resignFirstResponder];
 }
 
 #pragma mark -
@@ -399,6 +401,8 @@
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    [SearchBar resignFirstResponder];
+
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatStoryboard" bundle:nil];
     ChatViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"Chat"];
     viewController.isCameFromWall = YES;

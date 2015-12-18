@@ -65,6 +65,8 @@ static const CGFloat kMinImageScale = 1.0f;
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     CGRect windowBounds = rootViewController.view.bounds;
     
+    windowBounds = CGRectMake(0, -1, windowBounds.size.width, windowBounds.size.height);
+    
     self.view = [[UIView alloc] initWithFrame:windowBounds];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
@@ -82,11 +84,16 @@ static const CGFloat kMinImageScale = 1.0f;
     [_doneButton addTarget:self
                     action:@selector(close:)
           forControlEvents:UIControlEventTouchUpInside];
-    [_doneButton setBackgroundImage:[UIImage imageNamed:@"Done"] forState:UIControlStateNormal];
-    _doneButton.frame = CGRectMake(windowBounds.size.width - 38.0f, 15.0f, 32.0f, 32.0f);
+    [_doneButton setTitle:@"Done" forState:UIControlStateNormal];
+    //[_doneButton setBackgroundImage:[UIImage imageNamed:@"Done"] forState:UIControlStateNormal];
+    _doneButton.frame = CGRectMake(windowBounds.size.width - 70.0f, 15.0f, 60.0f, 30.0f);
     _doneButton.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_doneButton];
     _doneButton.alpha = 1.0f;
+    _doneButton.layer.cornerRadius = 5.0;
+    _doneButton.layer.masksToBounds = YES;
+    [_doneButton.layer setBorderWidth:1.2f];
+    [_doneButton.layer setBorderColor:[UIColor whiteColor].CGColor];
 
     _superView = self.senderView.superview;
     // Compute Original Frame Relative To Screen
@@ -99,6 +106,9 @@ static const CGFloat kMinImageScale = 1.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.navigationController.navigationBarHidden = YES;
+
     _isAnimating = YES;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.senderView removeFromSuperview];
@@ -389,7 +399,8 @@ static const CGFloat kMinImageScale = 1.0f;
                 _doneButton.alpha = 1.0f;
             } completion:^(BOOL finished) {
                 _isDoneAnimating = NO;
-                [_doneButton removeFromSuperview];
+                
+                //[_doneButton removeFromSuperview];
             }];
         }
     }
