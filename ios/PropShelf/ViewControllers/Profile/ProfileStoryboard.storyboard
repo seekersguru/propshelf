@@ -68,7 +68,7 @@
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="H0b-td-rgQ">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="30"/>
+                                        <variation key="heightClass=regular-widthClass=compact" constant="28"/>
                                     </constraint>
                                     <constraint firstAttribute="width" constant="17" id="rmh-zh-hsZ">
                                         <variation key="heightClass=regular-widthClass=compact" constant="18"/>
@@ -613,7 +613,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="2Ua-bC-n3z" secondAttribute="trailing" constant="-8" id="n9n-lV-c5y"/>
                             <constraint firstAttribute="trailingMargin" secondItem="78n-hX-JIh" secondAttribute="trailing" constant="-8" id="nub-FX-7kI"/>
                             <constraint firstItem="2cB-7H-PwP" firstAttribute="centerY" secondItem="Mu9-oj-8VN" secondAttribute="centerY" id="pkh-cz-G2d">
-                                <variation key="heightClass=regular-widthClass=compact" constant="-4.5"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="-3.5"/>
                             </constraint>
                             <constraint firstItem="78n-hX-JIh" firstAttribute="top" secondItem="RTB-hb-8My" secondAttribute="bottom" constant="7" id="sBz-Od-ej5"/>
                             <constraint firstItem="Ecs-bg-AmL" firstAttribute="top" secondItem="2Ua-bC-n3z" secondAttribute="bottom" constant="8" id="yd5-cL-J5s"/>
