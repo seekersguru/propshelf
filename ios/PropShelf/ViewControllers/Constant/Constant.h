@@ -114,6 +114,8 @@
 
 #define ACCEPTABLE_CHARECTERS @"0123456789."
 
+#define RELOAD_DATA @"reloadData"
+
 //--------------- NSUserDefaults Keys ---------------
 
 #define APP_SESSION_ID @"appSessionId"

@@ -86,7 +86,7 @@ static const CGFloat kMinImageScale = 1.0f;
           forControlEvents:UIControlEventTouchUpInside];
     [_doneButton setTitle:@"Done" forState:UIControlStateNormal];
     //[_doneButton setBackgroundImage:[UIImage imageNamed:@"Done"] forState:UIControlStateNormal];
-    _doneButton.frame = CGRectMake(windowBounds.size.width - 70.0f, 15.0f, 60.0f, 30.0f);
+    _doneButton.frame = CGRectMake(windowBounds.size.width - 70.0f, 18.0f, 60.0f, 30.0f);
     _doneButton.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_doneButton];
     _doneButton.alpha = 1.0f;
@@ -107,8 +107,6 @@ static const CGFloat kMinImageScale = 1.0f;
 {
     [super viewDidLoad];
     
-    self.navigationController.navigationBarHidden = YES;
-
     _isAnimating = YES;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.senderView removeFromSuperview];
@@ -136,6 +134,13 @@ static const CGFloat kMinImageScale = 1.0f;
             }
         }];
     });
+}
+
+-(void)viewDidDisappear:(BOOL)animated {
+    
+    [super viewDidDisappear:animated];
+    
+    self.navigationController.navigationBarHidden = NO;
 }
 
 #pragma mark - Compute the new size of image relative to width(window)
@@ -250,6 +255,8 @@ static const CGFloat kMinImageScale = 1.0f;
 #pragma mark - Dismiss
 - (void)dismissViewController
 {
+    [_doneButton removeFromSuperview];
+    
     _isAnimating = YES;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self hideDoneButton];

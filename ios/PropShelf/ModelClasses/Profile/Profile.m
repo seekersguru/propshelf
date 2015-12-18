@@ -43,7 +43,7 @@
 -(void)didFinishWithGetLoggedInUserProfileRequest:(ASIHTTPRequest *)request
 {
     NSLog(@"GetLoggedInUserProfile Status Code:- %d",request.responseStatusCode);
-    NSLog(@"GetLoggedInUserProfile response :- %@",request.responseString);
+    //NSLog(@"GetLoggedInUserProfile response :- %@",request.responseString);
     
     NSError *error = [request error];
     

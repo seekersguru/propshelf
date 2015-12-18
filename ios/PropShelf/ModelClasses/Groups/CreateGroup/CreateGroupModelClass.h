@@ -10,7 +10,7 @@
 
 @protocol CreateGroupModelClassDelegate <NSObject>
 
--(void)didCreateGroupSuccessfully;
+-(void)didCreateGroupSuccessfully:(NSString *)message;
 -(void)didCreateGroupFailed:(ASIHTTPRequest *)therequest;
 
 -(void)didGetGroupUserSuccessfully:(NSMutableArray *)userArray;

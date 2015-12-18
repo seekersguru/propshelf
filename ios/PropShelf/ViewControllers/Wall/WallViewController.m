@@ -110,6 +110,44 @@
     self.navigationItem.titleView = navTitleView;
     
     [self.navigationController.navigationBar setNeedsLayout];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData:) name:RELOAD_DATA object:nil];
+}
+
+#pragma mark - reloadZomentTableView Methods
+
+-(void) reloadData:(NSNotification*) notification
+{
+    //NSLog(@"Reload DB");
+    
+    searching = NO;
+    
+    if (segmentedControl.selectedSegmentIndex == 0) {
+        
+        isChat = YES;
+        
+        if (self.getWallModelClass == nil) {
+            
+            self.getWallModelClass = [[Wall alloc] init];
+            self.getWallModelClass.delegate = self;
+        }
+        
+        [self.getWallModelClass getWallRequest:1];
+    }
+    else {
+        
+        isChat = NO;
+        
+        if (self.getGroupsModelClass == nil) {
+            
+            self.getGroupsModelClass = [[GetGroupsModelClass alloc] init];
+            self.getGroupsModelClass.delegate = self;
+        }
+        
+        [self.getGroupsModelClass getGroupsRequest:1];
+    }
+    
+    [self.tableView reloadData];
 }
 
 #pragma mark - getWallDetails Method

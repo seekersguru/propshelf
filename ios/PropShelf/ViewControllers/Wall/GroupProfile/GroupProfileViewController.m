@@ -102,7 +102,7 @@
 
 #pragma mark - Get Group Users Model Class Delegate
 
--(void)didCreateGroupSuccessfully {
+-(void)didCreateGroupSuccessfully:(NSString *)message {
     
     [self removeLoader];
 }

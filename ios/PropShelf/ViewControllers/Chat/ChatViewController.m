@@ -619,6 +619,10 @@
 
 -(void)didJoinUnJoinGroupSuccessfully {
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_DATA object:nil];
+
+    self.isGroupJoined = 1;
+    
     joinBtn.hidden = YES;
     
     self.sphChatTable.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 45);
@@ -628,6 +632,10 @@
 
 -(void)didJoinUnJoinGroupFailed:(ASIHTTPRequest *)therequest {
     
+    self.isGroupJoined = 0;
+    
+    joinBtn.hidden = NO;
+
     [self removeLoader];
 }
 
@@ -726,8 +734,6 @@
 (UIImagePickerController *)picker
 {
     [self dismissViewControllerAnimated:YES completion:nil];
-    
-    picker = nil;
 }
 
 -(void)imagePickerController:(UIImagePickerController *)picker

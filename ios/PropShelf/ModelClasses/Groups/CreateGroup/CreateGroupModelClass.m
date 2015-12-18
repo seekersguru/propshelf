@@ -55,7 +55,7 @@
     
     if ((request.responseStatusCode >= 200 && request.responseStatusCode <= 210) && !error)
     {
-        /*NSMutableDictionary *responseDict = [NSJSONSerialization
+        NSMutableDictionary *responseDict = [NSJSONSerialization
                                              JSONObjectWithData:request.responseData //1
                                              
                                              options:kNilOptions
@@ -63,10 +63,12 @@
         
         if (responseDict != nil) {
             
-            [delegate didCreateGroupSuccessfully];
-        }*/
-        
-        [delegate didCreateGroupSuccessfully];
+            [delegate didCreateGroupSuccessfully:[responseDict objectForKey:@"message"]];
+        }
+        else {
+            
+            [delegate didCreateGroupSuccessfully:nil];
+        }
     }
     else {
         

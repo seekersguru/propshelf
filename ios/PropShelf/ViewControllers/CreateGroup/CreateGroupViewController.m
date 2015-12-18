@@ -127,6 +127,8 @@
 
 -(void)resignKeyKeyboard:(id)sender
 {
+    [self didEndAnimation];
+    
     [txtGroupName resignFirstResponder];
     [txtCity resignFirstResponder];
     [txtLocation resignFirstResponder];
@@ -185,60 +187,76 @@
 
 -(IBAction)createGroupBtnTapped:(id)sender {
     
-    if ([txtGroupName.text length] > 0 && [txtCity.text length] > 0 && [txtLocation.text length] > 0) {
-        
-        if ([NetworkError checkNetwork]) {
-            
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isNewCreated"];
-            
-            [self showLoaderWithTitle:@"Creating Group..."];
-            
-            if (self.createGroupModelClass == nil) {
-                
-                self.createGroupModelClass = [[CreateGroupModelClass alloc] init];
-                self.createGroupModelClass.delegate = self;
-            }
-            
-            NSMutableDictionary *dict = nil;
-            
-            NSData* imageData = [Common resizeImageData:groupPicBtn.imageView.image];
-            NSString *streamBase64 = [ASIHTTPRequest base64forData:imageData];
+    [self didEndAnimation];
 
-            if ([description.text length] > 0) {
+    if ([txtGroupName.text length] >= 3) {
+        
+        if ([description.text length] >= 10) {
+
+            if ([txtCity.text length] > 0 && [txtLocation.text length] > 0) {
                 
-                if (streamBase64 == nil) {
+                if ([NetworkError checkNetwork]) {
                     
-                    dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", description.text, @"description", nil];
+                    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isNewCreated"];
+                    
+                    [self showLoaderWithTitle:@"Creating Group..."];
+                    
+                    if (self.createGroupModelClass == nil) {
+                        
+                        self.createGroupModelClass = [[CreateGroupModelClass alloc] init];
+                        self.createGroupModelClass.delegate = self;
+                    }
+                    
+                    NSMutableDictionary *dict = nil;
+                    
+                    NSData* imageData = [Common resizeImageData:groupPicBtn.imageView.image];
+                    NSString *streamBase64 = [ASIHTTPRequest base64forData:imageData];
+                    
+                    if ([description.text length] > 0) {
+                        
+                        if (streamBase64 == nil) {
+                            
+                            dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", description.text, @"description", nil];
+                        }
+                        else {
+                            
+                            dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", description.text, @"description", streamBase64, @"group_pic", nil];
+                        }
+                    }
+                    else {
+                        
+                        if (streamBase64 == nil) {
+                            
+                            dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", nil];
+                        }
+                        else {
+                            
+                            dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", streamBase64, @"group_pic", nil];
+                        }
+                    }
+                    
+                    [self.createGroupModelClass createGroupRequest:dict];
                 }
                 else {
                     
-                    dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", description.text, @"description", streamBase64, @"group_pic", nil];
+                    [self showAlertViewWithTitle:NSLocalizedString(@"NO_INTERNET_ALERT_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_ALERT_MESSAGE", nil)];
+                    
+                    return;
                 }
             }
             else {
-               
-                if (streamBase64 == nil) {
-                    
-                    dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", nil];
-                }
-                else {
-                    
-                    dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:txtGroupName.text, @"name", txtCity.text, @"city", txtLocation.text, @"location", streamBase64, @"group_pic", nil];
-                }
+                
+                [self showAlertViewWithTitle:NSLocalizedString(@"APP_POPUP_TITLE", nil) message:NSLocalizedString(@"ENTER_MANDATORY_FIELDS", nil)];
             }
-            
-            [self.createGroupModelClass createGroupRequest:dict];
         }
         else {
             
-            [self showAlertViewWithTitle:NSLocalizedString(@"NO_INTERNET_ALERT_TITLE", nil) message:NSLocalizedString(@"NO_INTERNET_ALERT_MESSAGE", nil)];
-            
-            return;
+            [self showAlertViewWithTitle:NSLocalizedString(@"APP_POPUP_TITLE", nil) message:NSLocalizedString(@"DESCRIPTION_VALIDATION_FIELDS", nil)];
         }
     }
     else {
         
-        [self showAlertViewWithTitle:NSLocalizedString(@"APP_POPUP_TITLE", nil) message:NSLocalizedString(@"ENTER_MANDATORY_FIELDS", nil)];
+        [self showAlertViewWithTitle:NSLocalizedString(@"APP_POPUP_TITLE", nil) message:NSLocalizedString(@"GROUP_NAME_VALIDATION_FIELDS", nil)];
         
         return;
     }
@@ -355,7 +373,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 #pragma mark - Create Group Model Class Delegate
 
--(void)didCreateGroupSuccessfully {
+-(void)didCreateGroupSuccessfully:(NSString *)message {
+    
+    if ([message isEqualToString:@"Group with same name already exists"]) {
+        
+        [self showAlertViewWithTitle:NSLocalizedString(@"APP_POPUP_TITLE", nil) message:message];
+        
+        return;
+    }
     
     [self removeLoader];
     
@@ -530,11 +555,11 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         isCity = NO;
         isLocation = YES;
         
-        if ([txtCity.text length] > 0) {
+        if ([txtCity.text length] > 0 && self.locationArray.count == 0) {
             
             [self getAllLocations];
         }
-        else {
+        else if ([txtLocation.text length] == 0){
             
             [self showAlertViewWithTitle:NSLocalizedString(@"APP_POPUP_TITLE", nil) message:NSLocalizedString(@"SELECT_CITY", nil)];
         }

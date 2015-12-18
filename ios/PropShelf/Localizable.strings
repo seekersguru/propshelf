@@ -45,6 +45,10 @@
 
 "ENTER_MANDATORY_FIELDS" = "Please enter all mandatory fileds.";
 
+"GROUP_NAME_VALIDATION_FIELDS" = "Group name should have at least 3 chars.";
+
+"DESCRIPTION_VALIDATION_FIELDS" = "Description should have at least 10 chars.";
+
 "SELECT_CITY" = "Please select city first.";
 
 
