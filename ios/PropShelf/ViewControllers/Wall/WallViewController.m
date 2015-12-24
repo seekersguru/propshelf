@@ -114,7 +114,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData:) name:RELOAD_DATA object:nil];
 }
 
-#pragma mark - reloadZomentTableView Methods
+#pragma mark - reloadTableView Methods
 
 -(void) reloadData:(NSNotification*) notification
 {

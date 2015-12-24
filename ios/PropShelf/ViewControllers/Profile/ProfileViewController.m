@@ -474,6 +474,8 @@
 
 -(void)didJoinUnJoinGroupSuccessfully {
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_DATA object:nil];
+
     NSMutableDictionary *dict = [[groupsArray objectAtIndex:selectedIndexPath] mutableCopy];
     
     if ([[dict objectForKey:@"logged_in_user_joined_unjoined"] intValue] == 0) {
